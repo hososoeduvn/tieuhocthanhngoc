@@ -456,9 +456,10 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 <div class="pg active" id="pg-home">
 <section class="hero"><div class="hero-c">
   <div class="hero-cnt">
-    <div class="hero-badge"><i class="fas fa-sun"></i> <span id="hNamHoc">Năm học 2025 - 2026</span></div>
+    <div class="hero-badge"><i class="fas fa-cog"></i> <span id="hNamHoc">NỀN TẢNG QUẢN TRỊ SỐ</span></div>
     <h1 class="hero-title"><span class="l1" id="hTen1">Trường Tiểu học</span><span class="l2" id="hTen2">Thanh Ngọc</span></h1>
-    <p class="hero-sub" id="hMoTa">Chắp cánh ước mơ — Vững bước tương lai</p>
+    <p style="display:flex;align-items:center;gap:8px;color:var(--p);font-size:15px;font-weight:600;margin-bottom:16px"><i class="fas fa-map-marker-alt"></i> <span id="hDiaChi">Xã Đại Đồng, Tỉnh Nghệ An</span></p>
+    <p class="hero-sub" id="hMoTa">Nền tảng tích hợp Hồ sơ số, Sổ chủ nhiệm điện tử và Quản lý chất lượng giáo dục — hướng tới quản trị nhà trường minh bạch, chính xác và hiệu quả.</p>
   </div>
   <div class="hero-vis"><div class="h-cards h-cards-full">
     <div class="h-card" onclick="go('hoso')"><div class="h-card-i hci1">📁</div><h4>Hồ sơ số</h4><p id="hHoSoCount">102 danh mục</p></div>
@@ -647,6 +648,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
             <button class="dbtn dbtn-b" onclick="document.getElementById('diemImportFile').click()"><i class="fas fa-upload"></i> Nhập từ Excel</button>
             <input type="file" id="diemImportFile" accept=".xlsx,.xls" style="display:none" onchange="diemImportExcel()">
             <button class="dbtn dbtn-o" onclick="diemSaveLop()"><i class="fas fa-cloud-upload-alt"></i> Lưu lên Sheets</button>
+            <button class="dbtn" style="background:#faf5ff;color:#7c3aed" onclick="diemAutoEval()" id="btnAutoEval" title="Tự động đánh giá xếp loại cuối năm"><i class="fas fa-magic"></i> Xếp loại CN</button>
           </div>
         </div>
         <div class="diem-info" id="diemInfo"></div>
@@ -927,8 +929,10 @@ function renderThongTin() {
   document.getElementById('logoName').textContent = t.ten_truong.replace('Trường ','');
   const addrEl = document.getElementById('logoAddr');
   if (addrEl && t.dia_chi) addrEl.textContent = t.dia_chi;
-  document.getElementById('hNamHoc').textContent = 'Năm học ' + (t.nam_hoc || '2025 - 2026');
-  document.getElementById('hMoTa').textContent = t.mo_ta || '';
+  // Hero: giữ badge "NỀN TẢNG QUẢN TRỊ SỐ", cập nhật địa chỉ
+  const hAddr = document.getElementById('hDiaChi');
+  if (hAddr && t.dia_chi) hAddr.textContent = t.dia_chi;
+  if (t.mo_ta) document.getElementById('hMoTa').textContent = t.mo_ta;
   document.getElementById('ctName').textContent = t.ten_truong;
   document.getElementById('ctAddr').textContent = t.dia_chi || '';
   document.getElementById('ctPhone').textContent = t.dien_thoai || '';
@@ -1554,7 +1558,12 @@ const MUC_MON = ['T','H','C']; // Hoàn thành tốt / Hoàn thành / Chưa HT
 const MUC_NLPC = ['T','Đ','C']; // Tốt / Đạt / Cần cố gắng
 
 function getMonByKhoi(khoi) { return MON_KHOI[khoi] || MON_KHOI['1']; }
-function hasKTDK(ky) { return ky === 'CK1' || ky === 'CN'; }
+function hasKTDK(ky, khoi) {
+  // TT27: Lớp 4-5: KTĐK cả 4 kỳ; Lớp 1-2-3: chỉ CK1 + CN
+  const k = parseInt(khoi);
+  if (k >= 4) return true; // GK1, CK1, GK2, CN đều có KTĐK
+  return ky === 'CK1' || ky === 'CN';
+}
 
 async function diemAuth() {
   const pw = document.getElementById('diemPw').value.trim();
@@ -1635,7 +1644,7 @@ async function diemLoadLop() {
   try { const r = await api({action:'getDiemLop',lop,ky:diemKy}); if(r.success) diemData=r.data||{}; } catch(e) {}
   const students = (D.hocSinh||[]).filter(h=>h.Ma_lop===lop).sort((a,b)=>(a.Ho_ten||'').localeCompare(b.Ho_ten||''));
   const monList = getMonByKhoi(khoi);
-  const showKTDK = hasKTDK(diemKy);
+  const showKTDK = hasKTDK(diemKy, khoi);
   const nam = students.filter(h=>h.Gioi_tinh==='Nam').length;
   document.getElementById('diemInfo').innerHTML = '<span><i class="fas fa-users"></i> '+students.length+' HS</span><span>Nam: '+nam+' | Nữ: '+(students.length-nam)+'</span><span>Kỳ: <strong>'+diemKy+'</strong></span><span>Khối '+khoi+' ('+monList.length+' môn'+(showKTDK?' + Điểm KTĐK':'')+' + 3NL + 5PC)</span>';
   // Build table headers
@@ -1725,7 +1734,7 @@ async function diemSaveLop() {
   const khoi = diemLopCur[0];
   const monList = getMonByKhoi(khoi);
   const allMon = monList.concat(NANG_LUC).concat(PHAM_CHAT);
-  const showKTDK = hasKTDK(diemKy);
+  const showKTDK = hasKTDK(diemKy, khoi);
   const grades = [];
   document.querySelectorAll('.dtable tbody tr').forEach(tr => {
     const maHS = tr.getAttribute('data-ma');
@@ -1758,12 +1767,88 @@ async function diemSaveLop() {
     else { info.innerHTML = '<span style="color:#dc2626">'+j.error+'</span>'; }
   } catch(e) { info.innerHTML = '<span style="color:#dc2626">Lỗi: '+e.message+'</span>'; }
 }
+// ===== ĐÁNH GIÁ TỰ ĐỘNG CUỐI NĂM (TT27 Điều 9) =====
+function diemAutoEval() {
+  if (!diemLopCur) { alert('Chọn lớp trước'); return; }
+  if (diemKy !== 'CN') { alert('Chỉ xếp loại khi kỳ = Cuối năm (CN)'); return; }
+  const khoi = diemLopCur[0];
+  const monList = getMonByKhoi(khoi);
+  const results = [];
+  document.querySelectorAll('.dtable tbody tr').forEach(tr => {
+    const maHS = tr.getAttribute('data-ma');
+    const name = tr.getAttribute('data-name');
+    const badges = tr.querySelectorAll('.dg-badge[data-mon]');
+    const monGrades = {}; const nlpcGrades = {};
+    badges.forEach(b => {
+      const mon = b.getAttribute('data-mon');
+      const v = b.textContent.trim();
+      if (v && v !== '—') {
+        if (monList.includes(mon)) monGrades[mon] = v;
+        else nlpcGrades[mon] = v;
+      }
+    });
+    // Lấy điểm KTĐK Toán + TV
+    let diemToan = 0, diemTV = 0;
+    const inpT = tr.querySelector('.dktdk-input[data-mon="Toán"]');
+    const inpTV = tr.querySelector('.dktdk-input[data-mon="Tiếng Việt"]');
+    if (inpT) diemToan = parseInt(inpT.value)||0;
+    if (inpTV) diemTV = parseInt(inpTV.value)||0;
+    const minDiem = Math.min(diemToan, diemTV);
+    // Kiểm tra điều kiện
+    const allMonT = monList.every(m => monGrades[m] === 'T');
+    const allMonTorH = monList.every(m => monGrades[m] === 'T' || monGrades[m] === 'H');
+    const nlpcAll = Object.values(nlpcGrades);
+    const allNLT = nlpcAll.length > 0 && nlpcAll.every(v => v === 'T');
+    const allNLTorD = nlpcAll.length > 0 && nlpcAll.every(v => v === 'T' || v === 'Đ');
+    let xepLoai = 'CHT', khenThuong = '';
+    if (allMonT && allNLT && minDiem >= 9) {
+      xepLoai = 'HTXS'; khenThuong = 'Học sinh Xuất sắc';
+    } else if (allMonT && allNLT && minDiem >= 7) {
+      xepLoai = 'HTT'; khenThuong = 'HS Tiêu biểu';
+    } else if (allMonTorH && allNLTorD && minDiem >= 5) {
+      xepLoai = 'HT';
+    }
+    // Nếu chưa có đủ dữ liệu
+    const filledMon = Object.keys(monGrades).length;
+    if (filledMon < monList.length || nlpcAll.length < 8) {
+      xepLoai = '...'; khenThuong = 'Thiếu DL';
+    }
+    results.push({maHS, name, xepLoai, khenThuong, diemToan, diemTV, filledMon, totalMon: monList.length});
+  });
+  // Hiện modal kết quả
+  const htxs = results.filter(r=>r.xepLoai==='HTXS').length;
+  const htt = results.filter(r=>r.xepLoai==='HTT').length;
+  const ht = results.filter(r=>r.xepLoai==='HT').length;
+  const cht = results.filter(r=>r.xepLoai==='CHT').length;
+  const missing = results.filter(r=>r.xepLoai==='...').length;
+  let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">';
+  html += '<div style="background:#fff;border-radius:20px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;padding:0">';
+  html += '<div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);padding:20px 28px;border-radius:20px 20px 0 0;color:#fff"><h3>📊 Xếp loại cuối năm — Lớp '+diemLopCur+'</h3><div style="font-size:13px;opacity:.8">Theo Điều 9, TT27/2020/TT-BGDĐT</div></div>';
+  html += '<div style="padding:24px">';
+  html += '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">';
+  html += '<div style="background:#f0fdf4;border-radius:12px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#16a34a">'+htxs+'</div><div style="font-size:11px;color:#16a34a;font-weight:700">HT Xuất sắc</div></div>';
+  html += '<div style="background:#eff6ff;border-radius:12px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#2563eb">'+htt+'</div><div style="font-size:11px;color:#2563eb;font-weight:700">HT Tốt</div></div>';
+  html += '<div style="background:#fef3c7;border-radius:12px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#d97706">'+ht+'</div><div style="font-size:11px;color:#d97706;font-weight:700">Hoàn thành</div></div>';
+  html += '<div style="background:#fef2f2;border-radius:12px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#dc2626">'+cht+'</div><div style="font-size:11px;color:#dc2626;font-weight:700">Chưa HT</div></div>';
+  html += '<div style="background:#f8fafc;border-radius:12px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#94a3b8">'+missing+'</div><div style="font-size:11px;color:#94a3b8;font-weight:700">Thiếu DL</div></div>';
+  html += '</div>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#f1f5f9"><th style="text-align:left;padding:10px">Họ tên</th><th style="padding:10px;width:50px">Đ.Toán</th><th style="padding:10px;width:50px">Đ.TV</th><th style="padding:10px;width:100px">Xếp loại</th><th style="text-align:left;padding:10px">Khen thưởng</th></tr></thead><tbody>';
+  results.forEach(r => {
+    const color = r.xepLoai==='HTXS'?'#16a34a':r.xepLoai==='HTT'?'#2563eb':r.xepLoai==='HT'?'#d97706':r.xepLoai==='CHT'?'#dc2626':'#94a3b8';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600">'+r.name+'</td><td style="padding:8px;text-align:center;color:#7c3aed;font-weight:700">'+(r.diemToan||'—')+'</td><td style="padding:8px;text-align:center;color:#7c3aed;font-weight:700">'+(r.diemTV||'—')+'</td><td style="padding:8px;text-align:center"><span style="background:'+color+';color:#fff;padding:3px 12px;border-radius:8px;font-size:12px;font-weight:800">'+r.xepLoai+'</span></td><td style="padding:8px;font-size:12px;color:'+color+'">'+r.khenThuong+'</td></tr>';
+  });
+  html += '</tbody></table>';
+  html += '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px"><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:10px 24px;border:1px solid #e2e8f0;background:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600">Đóng</button></div>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
 function diemExportExcel() {
   if (!diemLopCur) { alert('Chọn lớp trước'); return; }
   const khoi = diemLopCur[0];
   const monList = getMonByKhoi(khoi);
   const allMon = monList.concat(NANG_LUC).concat(PHAM_CHAT);
-  const showKTDK = hasKTDK(diemKy);
+  const showKTDK = hasKTDK(diemKy, khoi);
   const header = ['Lớp','Họ tên','Mã HS'];
   monList.forEach(m => { header.push(m); if (showKTDK && MON_KTDK.includes(m)) header.push('Điểm KTĐK '+m); });
   NANG_LUC.forEach(n => header.push(n));
@@ -1819,7 +1904,7 @@ function diemEditRow(maHS) {
   if (!tr) return;
   const khoi = hs.Ma_lop[0];
   const monList = getMonByKhoi(khoi);
-  const showKTDK = hasKTDK(diemKy);
+  const showKTDK = hasKTDK(diemKy, khoi);
   const grades = {};
   tr.querySelectorAll('.dg-badge').forEach(b => { const v=b.textContent.trim(); if(v&&v!=='—') grades[b.getAttribute('data-mon')]=v; });
   const ktdkVals = {};
