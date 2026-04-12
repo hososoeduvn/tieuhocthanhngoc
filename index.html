@@ -326,6 +326,51 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 .hb-card h4{font-size:15px;color:var(--tx);margin-bottom:4px}.hb-card .hb-meta{font-size:12.5px;color:var(--tm);margin-bottom:10px}
 .hb-card .hb-info{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--tm);margin-bottom:10px}
 .hb-card .hb-info span{display:flex;align-items:center;gap:4px;background:var(--bg);padding:4px 10px;border-radius:8px}
+/* === Nhập điểm — Spreadsheet layout === */
+.diem-layout{display:flex;min-height:100vh}
+.diem-sidebar{width:220px;background:linear-gradient(180deg,#1e3a5f,#0f2744);color:#fff;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.diem-content{flex:1;margin-left:220px;padding-top:0;background:#f1f5f9;min-height:100vh}
+.diem-ky-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.dky{padding:8px 6px;border:2px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.dky:hover{border-color:rgba(255,255,255,.4);color:#fff}
+.dky.active{background:#2563eb;border-color:#2563eb;color:#fff}
+.diem-khoi-btns{display:flex;flex-direction:column;gap:6px}
+.dkh{padding:10px 14px;border:none;background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .2s;font-family:inherit}
+.dkh:hover{background:rgba(255,255,255,.12);color:#fff}
+.dkh.active{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
+.diem-toolbar{display:flex;align-items:center;gap:12px;padding:14px 20px;background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:50;flex-wrap:wrap}
+.diem-sel{padding:8px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:13px;font-weight:600;min-width:120px;font-family:inherit;background:#fff}
+.diem-search{padding:8px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:13px;flex:1;min-width:150px;font-family:inherit}
+.diem-search:focus,.diem-sel:focus{outline:none;border-color:#3b82f6}
+.dbtn{padding:8px 16px;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;font-family:inherit;white-space:nowrap}
+.dbtn-g{background:#dcfce7;color:#16a34a}.dbtn-g:hover{background:#16a34a;color:#fff}
+.dbtn-b{background:#dbeafe;color:#2563eb}.dbtn-b:hover{background:#2563eb;color:#fff}
+.dbtn-o{background:#fed7aa;color:#ea580c}.dbtn-o:hover{background:#ea580c;color:#fff}
+.dbtn-r{background:#fecaca;color:#dc2626}.dbtn-r:hover{background:#dc2626;color:#fff}
+.diem-info{display:flex;gap:16px;padding:12px 20px;background:#eff6ff;border-bottom:1px solid #dbeafe;font-size:13px;color:#1e40af;font-weight:600;flex-wrap:wrap}
+.diem-table-wrap{overflow-x:auto;padding:0}
+.dtable{width:100%;border-collapse:collapse;font-size:12px}
+.dtable th{background:#1e3a5f;color:#fff;padding:8px 6px;font-weight:700;text-align:center;position:sticky;top:0;z-index:10;white-space:nowrap;font-size:11px}
+.dtable th.th-mon{min-width:42px;max-width:48px}
+.dtable th.th-name{min-width:180px;text-align:left;position:sticky;left:0;z-index:20;background:#1e3a5f}
+.dtable th.th-lop{min-width:40px;position:sticky;left:0;z-index:20;background:#1e3a5f}
+.dtable td{padding:5px 4px;text-align:center;border-bottom:1px solid #f1f5f9;border-right:1px solid #f1f5f9}
+.dtable tr:hover td{background:#eff6ff}
+.dtable td.td-name{text-align:left;font-weight:600;color:#1e293b;position:sticky;left:0;background:#fff;z-index:5;padding-left:10px;white-space:nowrap}
+.dtable tr:hover td.td-name{background:#eff6ff}
+.dtable td.td-lop{font-weight:700;color:#3b82f6;font-size:11px;position:sticky;left:0;background:#fff;z-index:5}
+.dtable tr:hover td.td-lop{background:#eff6ff}
+.dg-badge{display:inline-block;padding:2px 6px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;min-width:28px;text-align:center;transition:all .15s;user-select:none}
+.dg-badge:hover{transform:scale(1.15);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.dg-T,.dg-HTT{background:#dcfce7;color:#16a34a}.dg-H,.dg-HT{background:#fef3c7;color:#d97706}
+.dg-CHT,.dg-CCG{background:#fecaca;color:#dc2626}.dg-D,.dg-Đ{background:#dbeafe;color:#2563eb}
+.dg-empty{background:#f8fafc;color:#cbd5e1;border:1px dashed #e2e8f0}
+.dtable .td-act{position:sticky;right:0;background:#fff;z-index:5}
+.dtable tr:hover .td-act{background:#eff6ff}
+.diem-edit-btn{background:none;border:none;color:#f97316;font-size:16px;cursor:pointer;padding:4px}
+.diem-edit-btn:hover{color:#ea580c;transform:scale(1.2)}
+@media(max-width:768px){.diem-sidebar{width:100%;position:relative;height:auto}.diem-content{margin-left:0}.diem-layout{flex-direction:column}.diem-toolbar{flex-direction:column;align-items:stretch}.diem-ky-grid{grid-template-columns:1fr 1fr 1fr 1fr}.diem-khoi-btns{flex-direction:row;flex-wrap:wrap}}
+
 .hb-card .hb-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--pbg);color:var(--p);border-radius:10px;font-size:13px;font-weight:600;text-decoration:none;transition:var(--tr)}
 .hb-card .hb-btn:hover{background:var(--p);color:#fff}
 .hb-card .hb-btn.no{opacity:.5;cursor:not-allowed}
@@ -480,35 +525,60 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
   <div class="hb-grid" id="hbGrid"></div>
 </div></section><footer class="ft"><p id="ftText7">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
 
-<!-- ==================== NHẬP ĐIỂM ==================== -->
-<div class="pg" id="pg-diem"><section class="sec" style="padding-top:100px"><div class="ctn">
-  <div class="sec-h"><div class="badge b-p"><i class="fas fa-edit"></i> Nhập điểm</div><h2 class="sec-t">Đánh giá học sinh</h2></div>
-  <div id="diemLogin" style="max-width:400px;margin:0 auto">
+<!-- ==================== NHẬP ĐIỂM (dạng bảng) ==================== -->
+<div class="pg" id="pg-diem">
+  <!-- Login -->
+  <div id="diemLogin" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
     <div class="adm-login-box">
       <div class="adm-login-ico"><i class="fas fa-lock"></i></div>
-      <h3>Đăng nhập để nhập điểm</h3>
-      <p>Nhập mật khẩu quản trị</p>
+      <h3>Nhập kết quả đánh giá</h3>
+      <p>Nhập mật khẩu quản trị để tiếp tục</p>
       <input type="password" id="diemPw" placeholder="Mật khẩu" onkeydown="if(event.key==='Enter')diemAuth()">
       <div id="diemLoginMsg" class="adm-msg"></div>
       <button class="btn btn-p" onclick="diemAuth()" style="width:100%;justify-content:center"><i class="fas fa-sign-in-alt"></i> Đăng nhập</button>
     </div>
   </div>
+  <!-- Main panel -->
   <div id="diemPanel" style="display:none">
-    <div style="background:#fff;border-radius:20px;padding:24px;box-shadow:var(--sh);max-width:800px;margin:0 auto">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px">
-        <div class="adm-f"><label>Chọn lớp</label><select id="dLop" onchange="diemLoadHS()" style="width:100%;padding:10px;border:2px solid var(--bg2);border-radius:10px;font-size:14px"><option value="">-- Chọn lớp --</option></select></div>
-        <div class="adm-f"><label>Chọn kỳ</label><select id="dKy" style="width:100%;padding:10px;border:2px solid var(--bg2);border-radius:10px;font-size:14px"><option value="GK1">Giữa HK1</option><option value="CK1">Cuối HK1</option><option value="GK2">Giữa HK2</option><option value="CN">Cuối năm</option></select></div>
-        <div class="adm-f"><label>Chọn học sinh</label><select id="dHS" onchange="diemLoadCurrent()" style="width:100%;padding:10px;border:2px solid var(--bg2);border-radius:10px;font-size:14px"><option value="">-- Chọn HS --</option></select></div>
+    <div class="diem-layout">
+      <!-- Sidebar -->
+      <div class="diem-sidebar">
+        <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.1)">
+          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px" id="diemSchoolName">TH Thanh Ngọc</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.6)">Nhập kết quả đánh giá</div>
+        </div>
+        <div style="padding:14px">
+          <div style="font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:700;margin-bottom:8px;letter-spacing:1px">Kỳ đánh giá</div>
+          <div class="diem-ky-grid" id="diemKyBtns">
+            <button class="dky active" onclick="diemSetKy(this,'GK1')">Giữa HK1</button>
+            <button class="dky" onclick="diemSetKy(this,'CK1')">Cuối HK1</button>
+            <button class="dky" onclick="diemSetKy(this,'GK2')">Giữa HK2</button>
+            <button class="dky" onclick="diemSetKy(this,'CN')">Cuối năm</button>
+          </div>
+          <div style="font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:700;margin:16px 0 8px;letter-spacing:1px">Chọn khối</div>
+          <div class="diem-khoi-btns" id="diemKhoiBtns"></div>
+        </div>
       </div>
-      <div id="diemForm" style="display:none">
-        <h4 id="diemHSName" style="color:var(--p);margin-bottom:14px"></h4>
-        <div id="diemMonList"></div>
-        <div id="diemMsg" class="adm-msg"></div>
-        <button class="btn btn-p" onclick="diemSave()" style="width:100%;justify-content:center;margin-top:12px"><i class="fas fa-save"></i> Lưu đánh giá</button>
+      <!-- Content -->
+      <div class="diem-content">
+        <div class="diem-toolbar">
+          <select id="dLop" onchange="diemLoadLop()" class="diem-sel"><option value="">-- Chọn lớp --</option></select>
+          <input id="dSearch" class="diem-search" placeholder="🔍 Tìm học sinh..." oninput="diemFilterRows()">
+          <div style="display:flex;gap:8px;margin-left:auto">
+            <button class="dbtn dbtn-g" onclick="diemExportExcel()"><i class="fas fa-download"></i> Xuất mẫu</button>
+            <button class="dbtn dbtn-b" onclick="document.getElementById('diemImportFile').click()"><i class="fas fa-upload"></i> Nhập từ Excel</button>
+            <input type="file" id="diemImportFile" accept=".xlsx,.xls" style="display:none" onchange="diemImportExcel()">
+            <button class="dbtn dbtn-o" onclick="diemSaveLop()"><i class="fas fa-cloud-upload-alt"></i> Lưu lên Sheets</button>
+          </div>
+        </div>
+        <div class="diem-info" id="diemInfo"></div>
+        <div class="diem-table-wrap" id="diemTableWrap">
+          <div style="text-align:center;padding:80px 20px;color:#94a3b8"><i class="fas fa-hand-pointer" style="font-size:48px;margin-bottom:16px;display:block"></i><p style="font-size:16px;font-weight:600">Chọn Khối → Lớp để bắt đầu nhập kết quả</p></div>
+        </div>
       </div>
     </div>
   </div>
-</div></section><footer class="ft"><p id="ftText8">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
+</div>
 
 <!-- HƯỚNG DẪN -->
 <div class="pg" id="pg-hdsd"><section class="sec" style="padding-top:100px"><div class="ctn"><div class="gd-wrap">
@@ -1076,43 +1146,6 @@ function hbFilter() {
     return '<div class="hb-card"><h4>'+(h.Ho_ten||'')+'</h4><div class="hb-meta">'+(h.Ma_HS||'')+' • Lớp '+(h.Ma_lop||'')+'</div><div class="hb-info"><span><i class="fas fa-birthday-cake"></i> '+(h.Ngay_sinh||'')+'</span><span><i class="fas fa-venus-mars"></i> '+(h.Gioi_tinh||'')+'</span>'+(h.Dan_toc?'<span><i class="fas fa-globe"></i> '+h.Dan_toc+'</span>':'')+(h.SDT?'<span><i class="fas fa-phone"></i> '+h.SDT+'</span>':'')+'</div>'+(ph?'<div style="font-size:12px;color:var(--tm);margin-bottom:8px">'+ph+'</div>':'')+'<a class="hb-btn" href="#" onclick="viewHocBa(&#39;'+h.Ma_HS+'&#39;);return false"><i class="fas fa-eye"></i> Xem học bạ</a></div>';
   }).join('') + (list.length>50?'<p style="text-align:center;color:var(--tm);padding:20px;grid-column:1/-1">Hiển thị 50/'+list.length+' — hãy lọc theo lớp hoặc tìm kiếm</p>':'') || '<p style="text-align:center;color:var(--tm);padding:40px;grid-column:1/-1">Không tìm thấy</p>';
 }
-// View học bạ chi tiết
-async function viewHocBa(maHS) {
-  const hs = (D.hocSinh||[]).find(h => String(h.Ma_HS)===String(maHS));
-  if (!hs) return;
-  // Load điểm CN
-  let diemCN = [];
-  try {
-    const res = await api({action:'getDiem',maHS:maHS,ky:'CN'});
-    if (res && res.success) diemCN = res.data||[];
-  } catch(e) {}
-  // Build modal
-  let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">';
-  html += '<div style="background:#fff;border-radius:20px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:30px">';
-  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h2 style="color:var(--p);font-size:20px">📋 Học bạ — '+hs.Ho_ten+'</h2><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--tm)">✕</button></div>';
-  // Thông tin cá nhân
-  html += '<div style="background:var(--bg);border-radius:14px;padding:18px;margin-bottom:18px"><h4 style="margin-bottom:10px;color:var(--tx)">Thông tin học sinh</h4>';
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:var(--tm)">';
-  html += '<div><strong>Họ tên:</strong> '+hs.Ho_ten+'</div><div><strong>Mã HS:</strong> '+hs.Ma_HS+'</div>';
-  html += '<div><strong>Ngày sinh:</strong> '+hs.Ngay_sinh+'</div><div><strong>Giới tính:</strong> '+hs.Gioi_tinh+'</div>';
-  html += '<div><strong>Lớp:</strong> '+hs.Ma_lop+'</div><div><strong>Dân tộc:</strong> '+(hs.Dan_toc||'')+'</div>';
-  html += '<div><strong>Cha:</strong> '+(hs.Ho_ten_cha||'')+'</div><div><strong>Mẹ:</strong> '+(hs.Ho_ten_me||'')+'</div>';
-  html += '</div></div>';
-  // Kết quả cuối năm
-  if (diemCN.length) {
-    html += '<div style="margin-bottom:18px"><h4 style="margin-bottom:10px;color:var(--tx)">Kết quả đánh giá Cuối năm</h4>';
-    html += '<table class="cl-table"><thead><tr><th>Môn học</th><th>Mức ĐG</th><th>Nhận xét</th></tr></thead><tbody>';
-    diemCN.forEach(d => {
-      const color = d.Muc_DG==='HTT'?'#10B981':d.Muc_DG==='HT'?'#3B82F6':'#EF4444';
-      html += '<tr><td style="text-align:left">'+d.Mon+'</td><td><span style="background:'+color+';color:#fff;padding:2px 10px;border-radius:8px;font-size:12px;font-weight:700">'+d.Muc_DG+'</span></td><td style="text-align:left;font-size:12px">'+(d.Nhan_xet||'')+'</td></tr>';
-    });
-    html += '</tbody></table></div>';
-  } else {
-    html += '<p style="color:var(--tm);font-size:14px">Chưa có kết quả đánh giá cuối năm.</p>';
-  }
-  html += '</div></div>';
-  document.body.insertAdjacentHTML('beforeend', html);
-}
 
 // ===== HÌNH ẢNH =====
 // Chuyển các dạng URL Google Drive / Photos về dạng hiển thị được trong thẻ <img>
@@ -1186,7 +1219,7 @@ function ssGo(i){ssIdx=i;const t=document.getElementById('ssTrack');if(t)t.style
 function ssMove(dir){ssGo((ssIdx+dir+ssCount)%ssCount);}
 
 // ===== NAVIGATION =====
-function go(p){document.querySelectorAll('.pg').forEach(x=>x.classList.remove('active'));document.getElementById('pg-'+p).classList.add('active');document.querySelectorAll('.mn-l').forEach(n=>n.classList.remove('active'));const a=document.querySelector('.mn-l[data-page="'+p+'"]');if(a)a.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});document.getElementById('menu').classList.remove('show');}
+function go(p){document.querySelectorAll('.pg').forEach(x=>x.classList.remove('active'));document.getElementById('pg-'+p).classList.add('active');document.querySelectorAll('.mn-l').forEach(n=>n.classList.remove('active'));const a=document.querySelector('.mn-l[data-page="'+p+'"]');if(a)a.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});document.getElementById('menu').classList.remove('show');const hd=document.getElementById('hd');if(p==='diem'){hd.style.display='none'}else{hd.style.display=''}}
 
 // ===== HỒ SƠ ACCORDION =====
 function togAcc(el){const b=el.nextElementSibling;const o=el.classList.contains('open');document.querySelectorAll('.acc-h').forEach(h=>{h.classList.remove('open');h.nextElementSibling.classList.remove('open')});if(!o){el.classList.add('open');b.classList.add('open')}}
@@ -1310,10 +1343,21 @@ async function admChangePw(){
   }catch(e){msg.className='adm-msg err';msg.textContent='Lỗi: '+e.message;}
 }
 
-// ===== NHẬP ĐIỂM =====
+// ===== NHẬP ĐIỂM — Spreadsheet style =====
 let diemPw = null;
-const DIEM_MON_HOC = ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Lịch sử và Địa lí','Khoa học','Tin học','Công nghệ','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm','Tiếng Anh'];
-const DIEM_NLPC = ['Năng lực tự chủ và tự học','Năng lực giao tiếp và hợp tác','Năng lực giải quyết vấn đề','Phẩm chất yêu nước','Phẩm chất nhân ái','Phẩm chất chăm chỉ','Phẩm chất trung thực','Phẩm chất trách nhiệm'];
+let diemKy = 'GK1';
+let diemKhoi = '';
+let diemLopCur = '';
+let diemData = {}; // maHS → {mon: mucDG}
+const MON_HOC = ['Toán','T.Việt','Đ.đức','TNXH','NN','TH','ÂN','MT','HĐTN','GDTC','Tự','Giao','Giải'];
+const MON_HOC_FULL = ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Ngoại ngữ','Tin học','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm','Giáo dục thể chất','Tự chủ và tự học','Giao tiếp và hợp tác','Giải quyết vấn đề'];
+const NLPC = ['Ngôn','Tính','Khoa','Thẩm','Thể','Yêu','Nhân','Chăm','Trun','Trác'];
+const NLPC_FULL = ['Năng lực ngôn ngữ','Năng lực tính toán','Năng lực khoa học','Năng lực thẩm mĩ','Năng lực thể chất','Phẩm chất yêu nước','Phẩm chất nhân ái','Phẩm chất chăm chỉ','Phẩm chất trung thực','Phẩm chất trách nhiệm'];
+const ALL_MON = MON_HOC_FULL.concat(NLPC_FULL);
+const ALL_MON_SHORT = MON_HOC.concat(NLPC);
+const MH_LEVELS = ['HTT','HT','CHT'];
+const NL_LEVELS = ['T','Đ','CCG'];
+
 async function diemAuth() {
   const pw = document.getElementById('diemPw').value.trim();
   const msg = document.getElementById('diemLoginMsg');
@@ -1325,80 +1369,272 @@ async function diemAuth() {
       diemPw = pw;
       document.getElementById('diemLogin').style.display='none';
       document.getElementById('diemPanel').style.display='block';
-      const lops = [...new Set((D.hocSinh||[]).map(h=>h.Ma_lop).filter(Boolean))].sort();
-      document.getElementById('dLop').innerHTML = '<option value="">-- Chọn lớp --</option>' + lops.map(l=>'<option value="'+l+'">Lớp '+l+'</option>').join('');
-    } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai mật khẩu'; }
+      const t = D.thongTin||{};
+      const el = document.getElementById('diemSchoolName');
+      if (el) el.textContent = (t.ten_truong||'TH Thanh Ngọc').replace('Trường ','');
+      diemBuildKhoi();
+    } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai'; }
   } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
 }
-function diemLoadHS() {
+function diemSetKy(btn, ky) {
+  diemKy = ky;
+  document.querySelectorAll('.dky').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if (diemLopCur) diemLoadLop();
+}
+function diemBuildKhoi() {
+  const khois = getKhoiStats();
+  const el = document.getElementById('diemKhoiBtns');
+  el.innerHTML = Object.keys(khois).sort().map(k =>
+    '<button class="dkh'+(k===diemKhoi?' active':'')+'" onclick="diemSetKhoi(this,&#39;'+k+'&#39;)"><i class="fas fa-layer-group"></i> Khối '+k+' <span style="opacity:.6;font-size:11px">('+khois[k].lops.length+' lớp)</span></button>'
+  ).join('');
+}
+function diemSetKhoi(btn, khoi) {
+  diemKhoi = khoi;
+  document.querySelectorAll('.dkh').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const khois = getKhoiStats();
+  const info = khois[khoi];
+  if (!info) return;
+  const sel = document.getElementById('dLop');
+  sel.innerHTML = '<option value="">-- Chọn lớp --</option>'+info.lops.map(l=>'<option value="'+l.lop+'">Lớp '+l.lop+' ('+l.ss+' HS)</option>').join('');
+  diemLopCur = '';
+  document.getElementById('diemTableWrap').innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8"><i class="fas fa-arrow-left" style="font-size:32px;margin-bottom:12px;display:block"></i><p>Chọn lớp từ dropdown phía trên</p></div>';
+}
+async function diemLoadLop() {
   const lop = document.getElementById('dLop').value;
-  const sel = document.getElementById('dHS');
-  if (!lop) { sel.innerHTML='<option value="">-- Chọn HS --</option>'; document.getElementById('diemForm').style.display='none'; return; }
-  const list = (D.hocSinh||[]).filter(h=>h.Ma_lop===lop).sort((a,b)=>(a.Ho_ten||'').localeCompare(b.Ho_ten||''));
-  sel.innerHTML = '<option value="">-- Chọn HS ('+list.length+') --</option>' + list.map(h=>'<option value="'+h.Ma_HS+'">'+h.Ho_ten+'</option>').join('');
-  document.getElementById('diemForm').style.display='none';
+  if (!lop) return;
+  diemLopCur = lop;
+  const wrap = document.getElementById('diemTableWrap');
+  wrap.innerHTML='<div style="text-align:center;padding:60px"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:#3b82f6"></i><p style="margin-top:12px;color:#64748b">Đang tải dữ liệu lớp '+lop+'...</p></div>';
+  // Load existing grades
+  diemData = {};
+  try {
+    const r = await api({action:'getDiemLop',lop:lop,ky:diemKy});
+    if (r.success) diemData = r.data||{};
+  } catch(e) { console.error(e); }
+  // Get students
+  const students = (D.hocSinh||[]).filter(h=>h.Ma_lop===lop).sort((a,b)=>(a.Ho_ten||'').localeCompare(b.Ho_ten||''));
+  // Info bar
+  const nam = students.filter(h=>h.Gioi_tinh==='Nam').length;
+  document.getElementById('diemInfo').innerHTML = '<span><i class="fas fa-users"></i> '+students.length+' HS</span><span><i class="fas fa-mars"></i> Nam: '+nam+'</span><span><i class="fas fa-venus"></i> Nữ: '+(students.length-nam)+'</span><span><i class="fas fa-calendar"></i> Kỳ: '+diemKy+'</span>';
+  // Build table
+  let html = '<table class="dtable"><thead><tr><th class="th-lop">Lớp</th><th class="th-name">Họ tên</th>';
+  ALL_MON_SHORT.forEach((m,i) => { html += '<th class="th-mon" title="'+ALL_MON[i]+'">'+m+'</th>'; });
+  html += '<th style="min-width:36px;position:sticky;right:0;background:#1e3a5f"></th></tr></thead><tbody>';
+  students.forEach(hs => {
+    const maHS = String(hs.Ma_HS);
+    const grades = diemData[maHS]||{};
+    html += '<tr data-ma="'+maHS+'">';
+    html += '<td class="td-lop">'+lop+'</td>';
+    html += '<td class="td-name">'+hs.Ho_ten+'</td>';
+    ALL_MON.forEach((mon,i) => {
+      const g = grades[mon]||{};
+      const v = g.mucDG||'';
+      const isNL = i >= MON_HOC_FULL.length;
+      const levels = isNL ? NL_LEVELS : MH_LEVELS;
+      const cls = v ? 'dg-'+v : 'dg-empty';
+      html += '<td><span class="dg-badge '+cls+'" data-mon="'+mon+'" data-isNL="'+(isNL?1:0)+'" onclick="diemToggle(this)">'+( v||'—')+'</span></td>';
+    });
+    html += '<td class="td-act"><button class="diem-edit-btn" onclick="diemEditRow(&#39;'+maHS+'&#39;)" title="Nhận xét chi tiết"><i class="fas fa-pen"></i></button></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
-async function diemLoadCurrent() {
-  const maHS = document.getElementById('dHS').value;
-  const ky = document.getElementById('dKy').value;
-  if (!maHS) { document.getElementById('diemForm').style.display='none'; return; }
+function diemToggle(el) {
+  const isNL = el.getAttribute('data-isNL')==='1';
+  const levels = isNL ? NL_LEVELS : MH_LEVELS;
+  const cur = el.textContent.trim();
+  let idx = levels.indexOf(cur);
+  idx = (idx+1) % (levels.length+1); // cycle: level1→level2→level3→empty→level1
+  const next = idx < levels.length ? levels[idx] : '';
+  el.textContent = next || '—';
+  el.className = 'dg-badge ' + (next ? 'dg-'+next : 'dg-empty');
+  // Mark dirty
+  el.setAttribute('data-dirty','1');
+}
+function diemFilterRows() {
+  const q = (document.getElementById('dSearch').value||'').toLowerCase();
+  document.querySelectorAll('.dtable tbody tr').forEach(tr => {
+    const name = tr.querySelector('.td-name');
+    if (!name) return;
+    tr.style.display = (!q || name.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+async function diemSaveLop() {
+  if (!diemLopCur || !diemPw) return;
+  // Collect all grades from table
+  const grades = [];
+  document.querySelectorAll('.dtable tbody tr').forEach(tr => {
+    const maHS = tr.getAttribute('data-ma');
+    const name = tr.querySelector('.td-name').textContent;
+    tr.querySelectorAll('.dg-badge').forEach(badge => {
+      const v = badge.textContent.trim();
+      if (v && v !== '—') {
+        grades.push({maHS, hoTen:name, mon:badge.getAttribute('data-mon'), mucDG:v, nhanXet:''});
+      }
+    });
+  });
+  if (!grades.length) { alert('Chưa có dữ liệu để lưu'); return; }
+  const info = document.getElementById('diemInfo');
+  const oldHTML = info.innerHTML;
+  info.innerHTML = '<span style="color:#f59e0b"><i class="fas fa-spinner fa-spin"></i> Đang lưu '+grades.length+' bản ghi...</span>';
+  try {
+    const body = JSON.stringify({password:diemPw, lop:diemLopCur, ky:diemKy, nguoiNhap:'GV', grades});
+    const r = await fetch(GAS_URL+'?action=nhapDiemLop', {method:'POST', body, headers:{'Content-Type':'text/plain'}});
+    const j = await r.json();
+    if (j.success) {
+      info.innerHTML = '<span style="color:#16a34a"><i class="fas fa-check-circle"></i> ✓ '+j.msg+'</span>';
+      setTimeout(()=>{ info.innerHTML = oldHTML; }, 3000);
+    } else {
+      info.innerHTML = '<span style="color:#dc2626"><i class="fas fa-exclamation-circle"></i> '+j.error+'</span>';
+    }
+  } catch(e) { info.innerHTML = '<span style="color:#dc2626">Lỗi: '+e.message+'</span>'; }
+}
+function diemExportExcel() {
+  if (!diemLopCur) { alert('Chọn lớp trước'); return; }
+  const students = (D.hocSinh||[]).filter(h=>h.Ma_lop===diemLopCur).sort((a,b)=>(a.Ho_ten||'').localeCompare(b.Ho_ten||''));
+  const header = ['Lớp','Họ tên','Mã HS'].concat(ALL_MON);
+  const rows = students.map(hs => {
+    const g = diemData[String(hs.Ma_HS)]||{};
+    return [diemLopCur, hs.Ho_ten, hs.Ma_HS].concat(ALL_MON.map(m => (g[m]||{}).mucDG||''));
+  });
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Diem_'+diemLopCur+'_'+diemKy);
+  XLSX.writeFile(wb, 'Diem_'+diemLopCur+'_'+diemKy+'.xlsx');
+}
+async function diemImportExcel() {
+  const input = document.getElementById('diemImportFile');
+  if (!input.files.length) return;
+  try {
+    const data = await input.files[0].arrayBuffer();
+    const wb = XLSX.read(data);
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+    if (rows.length < 2) { alert('File trống'); return; }
+    const header = rows[0];
+    // Map columns to mon names
+    const monMap = {};
+    header.forEach((h,i) => {
+      const idx = ALL_MON.findIndex(m => m === h || h.includes(m));
+      if (idx >= 0) monMap[i] = ALL_MON[idx];
+    });
+    // Update table
+    let updated = 0;
+    for (let r = 1; r < rows.length; r++) {
+      const maHS = String(rows[r][2]||'').trim(); // col C = Mã HS
+      if (!maHS) continue;
+      const tr = document.querySelector('.dtable tbody tr[data-ma="'+maHS+'"]');
+      if (!tr) continue;
+      Object.keys(monMap).forEach(colIdx => {
+        const mon = monMap[colIdx];
+        const val = String(rows[r][colIdx]||'').trim().toUpperCase();
+        if (!val) return;
+        const badge = tr.querySelector('.dg-badge[data-mon="'+mon+'"]');
+        if (badge) {
+          badge.textContent = val;
+          badge.className = 'dg-badge dg-'+val;
+          badge.setAttribute('data-dirty','1');
+          updated++;
+        }
+      });
+    }
+    alert('Đã nhập '+updated+' ô từ Excel. Nhấn "Lưu lên Sheets" để lưu.');
+  } catch(e) { alert('Lỗi đọc file: '+e.message); }
+  input.value = '';
+}
+function diemEditRow(maHS) {
   const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
   if (!hs) return;
-  document.getElementById('diemHSName').textContent = '📝 '+hs.Ho_ten+' — Lớp '+hs.Ma_lop+' — Kỳ: '+ky;
-  document.getElementById('diemForm').style.display='block';
-  let existing = [];
-  try { const r = await api({action:'getDiem',maHS:maHS,ky:ky}); if(r.success) existing=r.data||[]; } catch(e){}
-  const exMap = {}; existing.forEach(d => exMap[d.Mon] = d);
-  let html = '<div style="margin-bottom:14px"><h5 style="color:var(--tx);margin-bottom:8px;border-bottom:2px solid var(--bg2);padding-bottom:6px">📘 Môn học (HTT / HT / CHT)</h5>';
-  DIEM_MON_HOC.forEach(mon => {
-    const cur = exMap[mon]||{};
-    html += '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bg)"><div style="flex:1;font-size:13px;font-weight:600">'+mon+'</div><select data-mon="'+mon+'" style="padding:6px 10px;border:2px solid var(--bg2);border-radius:8px;font-size:13px;min-width:90px"><option value="">--</option><option value="HTT"'+(cur.Muc_DG==='HTT'?' selected':'')+'>HTT</option><option value="HT"'+(cur.Muc_DG==='HT'?' selected':'')+'>HT</option><option value="CHT"'+(cur.Muc_DG==='CHT'?' selected':'')+'>CHT</option></select></div>';
+  const tr = document.querySelector('.dtable tbody tr[data-ma="'+maHS+'"]');
+  if (!tr) return;
+  // Collect current grades from badges
+  const grades = {};
+  tr.querySelectorAll('.dg-badge').forEach(b => {
+    const v = b.textContent.trim();
+    if (v && v !== '—') grades[b.getAttribute('data-mon')] = v;
   });
-  html += '</div><div style="margin-bottom:14px"><h5 style="color:var(--tx);margin-bottom:8px;border-bottom:2px solid var(--bg2);padding-bottom:6px">🌟 Năng lực & Phẩm chất (T / Đ / CCG)</h5>';
-  DIEM_NLPC.forEach(mon => {
-    const cur = exMap[mon]||{};
-    html += '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bg)"><div style="flex:1;font-size:13px;font-weight:600">'+mon+'</div><select data-mon="'+mon+'" style="padding:6px 10px;border:2px solid var(--bg2);border-radius:8px;font-size:13px;min-width:90px"><option value="">--</option><option value="T"'+(cur.Muc_DG==='T'?' selected':'')+'>T</option><option value="Đ"'+(cur.Muc_DG==='Đ'?' selected':'')+'>Đ</option><option value="CCG"'+(cur.Muc_DG==='CCG'?' selected':'')+'>CCG</option></select></div>';
+  // Build modal with nhận xét for each mon
+  let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">';
+  html += '<div style="background:#fff;border-radius:20px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="color:#1e3a5f">📝 Học bạ: '+hs.Ho_ten+'</h3><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8">✕</button></div>';
+  html += '<div style="font-size:13px;color:#64748b;margin-bottom:16px">Lớp '+hs.Ma_lop+' · '+hs.Ngay_sinh+' · '+hs.Gioi_tinh+'</div>';
+  // Môn học section
+  html += '<h4 style="margin-bottom:10px;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px">📘 1. Các môn học và hoạt động giáo dục</h4>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px"><thead><tr style="background:#f1f5f9"><th style="text-align:left;padding:8px">Môn học</th><th style="padding:8px;width:80px">Mức đạt</th><th style="text-align:left;padding:8px">Nhận xét</th></tr></thead><tbody>';
+  MON_HOC_FULL.forEach(mon => {
+    const v = grades[mon]||'';
+    const cls = v ? 'dg-'+v : '';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600">'+mon+'</td><td style="padding:8px;text-align:center">'+(v?'<span class="dg-badge '+cls+'">'+v+'</span>':'<span style="color:#cbd5e1">—</span>')+'</td><td style="padding:8px"><input class="nx-input" data-mon="'+mon+'" placeholder="Nhận xét..." style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
   });
-  html += '</div>';
-  const nxCur = exMap['Nhận xét chung']||{};
-  html += '<div class="adm-f"><label>Nhận xét chung (<a href="#" onclick="diemAI();return false" style="color:var(--p);font-weight:700">🤖 AI tạo</a>)</label><textarea id="dNhanXet" rows="3" style="width:100%;padding:10px;border:2px solid var(--bg2);border-radius:10px;font-size:13px;font-family:inherit;resize:vertical">'+(nxCur.Nhan_xet||'')+'</textarea></div>';
-  document.getElementById('diemMonList').innerHTML = html;
+  html += '</tbody></table>';
+  // NL/PC section
+  html += '<h4 style="margin-bottom:10px;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px">💜 2. Năng lực & Phẩm chất</h4>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px"><tbody>';
+  NLPC_FULL.forEach(mon => {
+    const v = grades[mon]||'';
+    const cls = v ? 'dg-'+v : '';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600">'+mon+'</td><td style="padding:8px;text-align:center;width:80px">'+(v?'<span class="dg-badge '+cls+'">'+v+'</span>':'<span style="color:#cbd5e1">—</span>')+'</td><td style="padding:8px"><input class="nx-input" data-mon="'+mon+'" placeholder="Nhận xét..." style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
+  });
+  html += '</tbody></table>';
+  // Buttons
+  html += '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">';
+  html += '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:10px 20px;border:1px solid #e2e8f0;background:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;color:#64748b">Đóng</button>';
+  html += '<button onclick="diemAINx(&#39;'+maHS+'&#39;)" style="padding:10px 20px;border:none;background:#8b5cf6;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-robot"></i> AI Nhận xét</button>';
+  html += '<button onclick="diemSaveNx(&#39;'+maHS+'&#39;)" style="padding:10px 20px;border:none;background:#2563eb;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-save"></i> Lưu</button>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
 }
-async function diemSave() {
-  const maHS = document.getElementById('dHS').value;
-  const ky = document.getElementById('dKy').value;
+async function diemAINx(maHS) {
   const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
   if (!hs) return;
-  const msg = document.getElementById('diemMsg');
+  const inputs = document.querySelectorAll('.nx-input');
+  // Collect grades from modal badges
+  const grades = [];
+  document.querySelectorAll('div[style*="fixed"] .dg-badge').forEach(b => {
+    const v = b.textContent.trim();
+    if (v && v!=='—') grades.push(b.closest('tr').querySelector('td').textContent+': '+v);
+  });
+  if (!grades.length) { alert('Chưa có mức đánh giá'); return; }
+  inputs.forEach(inp => inp.value = '⏳ Đang tạo...');
+  try {
+    const prompt = 'Bạn là giáo viên tiểu học Việt Nam. Học sinh '+hs.Ho_ten+' lớp '+hs.Ma_lop+' có kết quả: '+grades.join(', ')+'. Hãy viết nhận xét cho TỪNG môn (mỗi môn 1 câu ngắn 8-15 từ, tích cực khích lệ). Trả về dạng JSON object: {"Toán":"...","Tiếng Việt":"...",...}. Chỉ trả về JSON, không giải thích.';
+    const r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const j = await r.json();
+    const text = (j.content&&j.content[0]&&j.content[0].text)||'{}';
+    const clean = text.replace(/```json|```/g,'').trim();
+    const nx = JSON.parse(clean);
+    inputs.forEach(inp => {
+      const mon = inp.getAttribute('data-mon');
+      if (nx[mon]) inp.value = nx[mon];
+      else inp.value = '';
+    });
+  } catch(e) { inputs.forEach(inp => inp.value = ''); alert('Lỗi AI: '+e.message); }
+}
+async function diemSaveNx(maHS) {
+  const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
+  if (!hs) return;
   const items = [];
-  document.querySelectorAll('#diemMonList select[data-mon]').forEach(sel => {
-    if (sel.value) items.push({maHS,hoTen:hs.Ho_ten,lop:hs.Ma_lop,ky,mon:sel.getAttribute('data-mon'),mucDG:sel.value,nhanXet:''});
+  document.querySelectorAll('.nx-input').forEach(inp => {
+    const mon = inp.getAttribute('data-mon');
+    const nx = inp.value.trim();
+    // Get grade from badge in same row
+    const badge = inp.closest('tr').querySelector('.dg-badge');
+    const mucDG = badge ? badge.textContent.trim() : '';
+    if (nx || (mucDG && mucDG !== '—')) {
+      items.push({maHS, hoTen:hs.Ho_ten, lop:hs.Ma_lop, ky:diemKy, mon, mucDG:mucDG==='—'?'':mucDG, nhanXet:nx});
+    }
   });
-  const nx = document.getElementById('dNhanXet').value.trim();
-  if (nx) items.push({maHS,hoTen:hs.Ho_ten,lop:hs.Ma_lop,ky,mon:'Nhận xét chung',mucDG:'',nhanXet:nx});
-  if (!items.length) { msg.className='adm-msg err'; msg.textContent='Chưa chọn mức đánh giá'; return; }
-  msg.className='adm-msg'; msg.textContent='Đang lưu '+items.length+' mục...';
+  if (!items.length) { alert('Không có dữ liệu'); return; }
   try {
     const q = 'action=nhapDiemBatch&data='+encodeURIComponent(JSON.stringify({password:diemPw,nguoiNhap:'GV',items}));
-    const r = await fetch(GAS_URL+'?'+q); const j = await r.json();
-    if (j.success) { msg.className='adm-msg ok'; msg.textContent='✓ '+j.msg; }
-    else { msg.className='adm-msg err'; msg.textContent=j.error||'Lỗi'; }
-  } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
-}
-async function diemAI() {
-  const maHS = document.getElementById('dHS').value;
-  const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
-  if (!hs) return;
-  const grades = [];
-  document.querySelectorAll('#diemMonList select[data-mon]').forEach(sel => { if(sel.value) grades.push(sel.getAttribute('data-mon')+': '+sel.value); });
-  if (!grades.length) { alert('Hãy chọn mức đánh giá trước'); return; }
-  const ta = document.getElementById('dNhanXet');
-  ta.value = '⏳ Đang tạo nhận xét...';
-  try {
-    const r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:'Viết nhận xét tổng hợp ngắn gọn (2-3 câu, tối đa 60 từ) cho học sinh '+hs.Ho_ten+' lớp '+hs.Ma_lop+' với kết quả: '+grades.join(', ')+'. Nhận xét tích cực, khích lệ. Chỉ trả lời nội dung nhận xét.'}]})});
+    const r = await fetch(GAS_URL+'?'+q);
     const j = await r.json();
-    ta.value = (j.content&&j.content[0]&&j.content[0].text)||'Không tạo được';
-  } catch(e) { ta.value = 'Lỗi AI: '+e.message; }
+    if (j.success) { alert('✓ '+j.msg); document.querySelector('div[style*="fixed"]').remove(); }
+    else alert(j.error||'Lỗi');
+  } catch(e) { alert('Lỗi: '+e.message); }
 }
 
 // Xem học bạ chi tiết
