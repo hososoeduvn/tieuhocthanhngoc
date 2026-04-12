@@ -131,10 +131,10 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 .ab-f{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg2);border-radius:var(--rs);font-size:13px;font-weight:700}.ab-f i{color:var(--ac)}
 
 /* ===== STATS ===== */
-.stats{background:linear-gradient(135deg,var(--p),var(--s),#5B7CF5);padding:60px 24px;position:relative;overflow:hidden}
-.stats::before,.stats::after{content:'';position:absolute;left:0;right:0;height:80px;background-size:cover}
-.stats::before{top:-40px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'%3E%3Cpath fill='%23F0F5FF' d='M0,0L1440,0L1440,30C1080,80,720,10,360,50C180,70,90,40,0,30Z'/%3E%3C/svg%3E") no-repeat}
-.stats::after{bottom:-40px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'%3E%3Cpath fill='%23F0F5FF' d='M0,80L1440,80L1440,50C1080,0,720,70,360,30C180,10,90,40,0,50Z'/%3E%3C/svg%3E") no-repeat}
+.stats{background:linear-gradient(135deg,var(--p),var(--s),#5B7CF5);padding:60px 24px;position:relative;overflow:visible;margin:0;z-index:2}
+.stats::before,.stats::after{content:'';position:absolute;left:0;right:0;height:60px;background-size:100% 100%;z-index:3}
+.stats::before{top:-59px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'%3E%3Cpath fill='%230047AB' d='M0,60L0,30C180,50,360,10,540,25C720,40,900,5,1080,20C1260,35,1380,15,1440,30L1440,60Z'/%3E%3C/svg%3E") no-repeat}
+.stats::after{bottom:-59px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'%3E%3Cpath fill='%235B7CF5' d='M0,0L0,30C180,10,360,50,540,35C720,20,900,55,1080,40C1260,25,1380,45,1440,30L1440,0Z'/%3E%3C/svg%3E") no-repeat}
 .stats-g{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .st-c{text-align:center;color:#fff;padding:20px}.st-i{font-size:36px;margin-bottom:10px;animation:bounce 2.5s ease-in-out infinite}
 .st-n{font-size:42px;font-weight:700;margin-bottom:4px}.st-l{font-size:14px;font-weight:700;opacity:.9}
@@ -697,55 +697,88 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 <div class="pg" id="pg-hdsd"><section class="sec" style="padding-top:100px"><div class="ctn"><div class="gd-wrap">
   <div class="sec-h"><div class="badge b-p"><i class="fas fa-book-open"></i> Hướng dẫn</div><h2 class="sec-t">Hướng dẫn sử dụng website</h2></div>
   <div class="gd-toc">
-    <a href="#gd1">1. Trang chủ</a>
+    <a href="#gd1">1. Tổng quan</a>
     <a href="#gd2">2. Hồ sơ số</a>
-    <a href="#gd3">3. Năng lực GV</a>
-    <a href="#gd4">4. Sổ CN & QL Chất lượng</a>
+    <a href="#gd3">3. Quản lý chất lượng</a>
+    <a href="#gd4">4. Sổ Chủ nhiệm</a>
     <a href="#gd5">5. Học bạ số</a>
-    <a href="#gd6">6. Hỏi & Đáp</a>
+    <a href="#gd6">6. Phân quyền GV</a>
+    <a href="#gd7">7. Hỏi & Đáp</a>
   </div>
 
-  <div class="gd-sec" id="gd1"><h3><span class="gd-num">1</span> Trang chủ</h3>
-    <p>Trang chủ là nơi bạn thấy tổng quan về trường. Phía trên cùng là <strong>thanh menu</strong> gồm 9 mục: Trang chủ, Hồ sơ số, Sổ CN, QL Chất lượng, Học bạ số, Năng lực GV, Các lớp học, Hướng dẫn, Quản trị. Trên điện thoại, menu thu gọn thành nút ☰.</p>
-    <div class="gd-fig"><svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="680" height="45" rx="10" fill="#fff" stroke="var(--p)" stroke-width="2"/><circle cx="40" cy="32" r="14" fill="var(--p)"/><text x="65" y="37" font-size="13" font-weight="700" fill="#1A2744">Tên trường</text><rect x="200" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="228" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Trang chủ</text><rect x="260" y="20" width="55" height="25" rx="6" fill="var(--p)"/><text x="288" y="37" font-size="9" text-anchor="middle" fill="#fff" font-weight="600">Hồ sơ số</text><rect x="320" y="20" width="45" height="25" rx="6" fill="#EEF2FF"/><text x="343" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Sổ CN</text><rect x="370" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="398" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Quản lý CL</text><rect x="430" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="458" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Học bạ số</text><rect x="490" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="518" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">GV</text><rect x="550" y="20" width="50" height="25" rx="6" fill="#EEF2FF"/><text x="575" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Lớp học</text><rect x="605" y="20" width="35" height="25" rx="6" fill="#EEF2FF"/><text x="623" y="37" font-size="8" text-anchor="middle" fill="var(--p)" font-weight="600">HD</text><rect x="645" y="20" width="35" height="25" rx="6" fill="#EEF2FF"/><text x="663" y="37" font-size="8" text-anchor="middle" fill="var(--p)" font-weight="600">QT</text><rect x="10" y="75" width="680" height="130" rx="14" fill="#F0F5FF"/><text x="350" y="115" font-size="22" text-anchor="middle" fill="var(--p)" font-weight="700">Slideshow + Giới thiệu trường</text><text x="350" y="145" font-size="13" text-anchor="middle" fill="#5A6E8A">Ảnh trường, tên, địa chỉ, số liệu tổng quan</text><rect x="60" y="160" width="140" height="35" rx="8" fill="var(--p)"/><text x="130" y="182" font-size="12" text-anchor="middle" fill="#fff" font-weight="600">Hồ sơ số →</text><rect x="220" y="160" width="140" height="35" rx="8" fill="#fff" stroke="var(--p)" stroke-width="2"/><text x="290" y="182" font-size="12" text-anchor="middle" fill="var(--p)" font-weight="600">Đội ngũ GV →</text></svg><div class="gd-cap">Bố cục trang chủ: Menu 9 mục trên cùng + Slideshow giới thiệu</div></div>
-    <ul><li><strong>Slideshow</strong>: các ảnh đại diện của trường luân chuyển tự động</li><li><strong>Card thống kê</strong>: số hồ sơ, số giáo viên, số lớp, số học sinh — cập nhật realtime từ dữ liệu</li><li><strong>Nút Hồ sơ số</strong>: đi nhanh tới danh mục hồ sơ</li></ul>
+  <div class="gd-sec" id="gd1"><h3><span class="gd-num">1</span> Tổng quan hệ thống</h3>
+    <p>Hệ thống <strong>Hồ sơ số</strong> là nền tảng quản trị số tích hợp 3 module: Hồ sơ số, Sổ chủ nhiệm điện tử và Quản lý chất lượng giáo dục. Dữ liệu lưu trữ trên Google Sheets, giao diện web truy cập mọi lúc, mọi nơi.</p>
+    <ul>
+      <li><strong>Trang chủ</strong>: hiển thị tên trường, địa chỉ, thống kê (CB/GV/NV, Học sinh, Lớp học, Hồ sơ số), slideshow hình ảnh và 6 card truy cập nhanh</li>
+      <li><strong>Menu desktop</strong>: 4 mục (Trang chủ, Hồ sơ số, Hướng dẫn, Quản trị). Trên điện thoại: nút ☰ mở menu đầy đủ 10 mục</li>
+      <li><strong>Không cần đăng nhập</strong> để xem trang chủ, hồ sơ số, năng lực GV, học bạ số. Chỉ cần đăng nhập khi vào <strong>Sổ CN</strong> hoặc <strong>QL Chất lượng</strong></li>
+    </ul>
   </div>
 
-  <div class="gd-sec" id="gd2"><h3><span class="gd-num">2</span> Xem Hồ sơ số</h3>
-    <p>Danh mục hồ sơ số được tổ chức thành <strong>3 tầng lồng nhau</strong>. Ban đầu bạn chỉ thấy 10 mục lớn. Click vào mục nào thì các nhóm con bên trong sẽ mở ra.</p>
-    <div class="gd-fig"><svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="15" width="660" height="60" rx="14" fill="#fff" stroke="var(--p)" stroke-width="2"/><rect x="35" y="27" width="38" height="38" rx="10" fill="rgba(var(--p-rgb),.1)"/><text x="54" y="53" font-size="18" text-anchor="middle">🏫</text><text x="85" y="45" font-size="14" font-weight="700" fill="#1A2744">1. Tổ chức và quản lý nhà trường</text><text x="85" y="62" font-size="11" fill="#5A6E8A">57 hồ sơ • 10 nhóm</text><text x="650" y="50" font-size="18" fill="var(--p)">▾</text><text x="360" y="100" font-size="11" text-anchor="middle" fill="var(--p)" font-weight="600">↓ click để mở</text><rect x="50" y="115" width="630" height="38" rx="8" fill="rgba(var(--p-rgb),.04)"/><text x="70" y="140" font-size="13">📂 1.1. Kế hoạch nhà trường (6)</text><text x="655" y="140" font-size="14" fill="#8DA0BE">▸</text><rect x="50" y="160" width="630" height="38" rx="8" fill="rgba(var(--p-rgb),.08)" stroke="var(--p)" stroke-width="1.5"/><text x="70" y="185" font-size="13" font-weight="600">📂 1.2. Hồ sơ các Hội đồng (7)</text><text x="655" y="185" font-size="14" fill="var(--p)">▾</text><rect x="80" y="210" width="600" height="30" rx="6" fill="#fff" stroke="rgba(0,0,0,.05)"/><rect x="90" y="217" width="40" height="16" rx="4" fill="#EEF2FF"/><text x="110" y="229" font-size="10" text-anchor="middle" fill="#5A6E8A" font-weight="600">1.2.1</text><text x="140" y="229" font-size="12" fill="#1A2744">Quyết định thành lập HĐ TĐ-KT</text><circle cx="600" cy="225" r="5" fill="#10B981"/><rect x="615" y="215" width="55" height="20" rx="5" fill="#4285F4"/><text x="643" y="229" font-size="11" text-anchor="middle" fill="#fff" font-weight="600">Mở</text><rect x="80" y="246" width="600" height="30" rx="6" fill="#fff" stroke="rgba(0,0,0,.05)"/><rect x="90" y="253" width="40" height="16" rx="4" fill="#EEF2FF"/><text x="110" y="265" font-size="10" text-anchor="middle" fill="#5A6E8A" font-weight="600">1.2.2</text><text x="140" y="265" font-size="12" fill="#1A2744">Quy chế TĐ-KT nội bộ</text><circle cx="600" cy="261" r="5" fill="#10B981"/><rect x="615" y="251" width="55" height="20" rx="5" fill="#4285F4"/><text x="643" y="265" font-size="11" text-anchor="middle" fill="#fff" font-weight="600">Mở</text><text x="545" y="300" font-size="11" fill="var(--p)" font-weight="600">← Click nút Mở để xem hồ sơ</text></svg><div class="gd-cap">3 tầng: Mục lớn → Nhóm con → Hồ sơ lá (có nút Mở Drive)</div></div>
-    <ul><li><strong>Tầng 1</strong>: 10 thẻ lớn có icon emoji, click để mở ra các nhóm cấp 2</li><li><strong>Tầng 2</strong>: nhóm con với icon 📂, click để mở tiếp</li><li><strong>Tầng 3</strong>: dòng hồ sơ có mã (1.1.1), tên, chấm trạng thái, nút <strong>Mở</strong> màu xanh — click để xem hồ sơ trên Google Drive trong tab mới</li></ul>
-    <div class="gd-note"><strong>💡 Mẹo:</strong> Chấm xanh = "Đã có"; chấm xám = "Chưa có". Dùng ô tìm kiếm phía trên để lọc nhanh theo tên hoặc mã hồ sơ.</div>
+  <div class="gd-sec" id="gd2"><h3><span class="gd-num">2</span> Hồ sơ số</h3>
+    <p>Danh mục 148 hồ sơ tổ chức <strong>3 tầng lồng nhau</strong>: 10 mục lớn → nhóm con → hồ sơ lá. Click để mở/đóng. Hồ sơ có link Drive hiện nút <strong>Mở</strong> màu xanh, chấm xanh = đã có, chấm xám = chưa có.</p>
+    <ul>
+      <li>Ô <strong>tìm kiếm</strong> ở đầu trang lọc nhanh theo tên hoặc mã hồ sơ</li>
+      <li>Admin có thể cập nhật link Drive và trạng thái hồ sơ từ trang Quản trị</li>
+    </ul>
   </div>
 
-  <div class="gd-sec" id="gd3"><h3><span class="gd-num">3</span> Xem Năng lực giáo viên</h3>
-    <p>Trang này hiển thị danh sách cán bộ, giáo viên, nhân viên nhà trường. Mỗi người là một <strong>thẻ card</strong> gồm: ảnh đại diện (chữ cái đầu), họ tên, chức vụ, và nút mở hồ sơ cá nhân trên Drive.</p>
-    <div class="gd-fig"><svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"><g><rect x="30" y="20" width="200" height="160" rx="14" fill="#fff" stroke="rgba(var(--p-rgb),.15)" stroke-width="1.5"/><rect x="30" y="20" width="200" height="4" rx="2" fill="var(--p)"/><circle cx="130" cy="62" r="26" fill="var(--p)"/><text x="130" y="70" font-size="22" text-anchor="middle" fill="#fff" font-weight="700">H</text><text x="130" y="110" font-size="14" text-anchor="middle" font-weight="700" fill="#1A2744">Hoàng Thị Hà</text><text x="130" y="128" font-size="11" text-anchor="middle" fill="#5A6E8A">Hiệu trưởng</text><rect x="55" y="142" width="150" height="28" rx="8" fill="rgba(var(--p-rgb),.08)"/><text x="130" y="160" font-size="11" text-anchor="middle" fill="var(--p)" font-weight="600">📂 Hồ sơ số</text></g><g><rect x="250" y="20" width="200" height="160" rx="14" fill="#fff" stroke="rgba(var(--p-rgb),.15)" stroke-width="1.5"/><rect x="250" y="20" width="200" height="4" rx="2" fill="#7C6CF5"/><circle cx="350" cy="62" r="26" fill="#7C6CF5"/><text x="350" y="70" font-size="22" text-anchor="middle" fill="#fff" font-weight="700">L</text><text x="350" y="110" font-size="14" text-anchor="middle" font-weight="700" fill="#1A2744">Ngô Thị Lan</text><text x="350" y="128" font-size="11" text-anchor="middle" fill="#5A6E8A">Phó Hiệu trưởng</text><rect x="275" y="142" width="150" height="28" rx="8" fill="rgba(var(--p-rgb),.08)"/><text x="350" y="160" font-size="11" text-anchor="middle" fill="var(--p)" font-weight="600">📂 Hồ sơ số</text></g><g><rect x="470" y="20" width="200" height="160" rx="14" fill="#fff" stroke="rgba(var(--p-rgb),.15)" stroke-width="1.5"/><rect x="470" y="20" width="200" height="4" rx="2" fill="#06B6D4"/><circle cx="570" cy="62" r="26" fill="#06B6D4"/><text x="570" y="70" font-size="22" text-anchor="middle" fill="#fff" font-weight="700">C</text><text x="570" y="110" font-size="14" text-anchor="middle" font-weight="700" fill="#1A2744">Đậu Thị Châu</text><text x="570" y="128" font-size="11" text-anchor="middle" fill="#5A6E8A">Giáo viên</text><rect x="495" y="142" width="150" height="28" rx="8" fill="rgba(var(--p-rgb),.08)"/><text x="570" y="160" font-size="11" text-anchor="middle" fill="var(--p)" font-weight="600">📂 Hồ sơ số</text></g></svg><div class="gd-cap">Danh sách giáo viên dạng card, mỗi card có nút mở hồ sơ cá nhân</div></div>
-    <p>Click vào một thẻ để xem thông tin chi tiết (ngày sinh, trình độ, nhiệm vụ, SĐT, email). Click nút <strong>📂 Hồ sơ số</strong> để mở folder hồ sơ cá nhân trên Google Drive.</p>
-    <div class="gd-note"><strong>💡 Mẹo:</strong> Ở đầu trang có các ô lọc theo chức vụ (Ban giám hiệu / Giáo viên / Nhân viên) giúp bạn tìm nhanh.</div>
+  <div class="gd-sec" id="gd3"><h3><span class="gd-num">3</span> Quản lý chất lượng (Nhập điểm)</h3>
+    <p>Đây là module chính để GV nhập kết quả đánh giá HS theo <strong>Thông tư 27/2020/TT-BGDĐT</strong>. Quy trình 6 bước:</p>
+    <ul>
+      <li><strong>Bước 1</strong>: Click <em>QL Chất lượng</em> → Đăng nhập (Họ tên + Mật khẩu). GV bộ môn dùng mật khẩu môn, GVCN dùng mật khẩu lớp, Admin dùng mật khẩu chung</li>
+      <li><strong>Bước 2</strong>: Chọn <em>Kỳ đánh giá</em> (GK1 / CK1 / GK2 / CN) ở sidebar trái</li>
+      <li><strong>Bước 3</strong>: Chọn <em>Khối → Lớp</em>. GV chỉ thấy lớp mình được phân công</li>
+      <li><strong>Bước 4</strong>: <em>Nhập mức đánh giá</em> — Click ô để xoay T→H→C (môn học) hoặc T→Đ→C (NL/PC). Trên điện thoại: hiển thị dạng card từng HS, vuốt ngang chuyển HS</li>
+      <li><strong>Bước 5</strong>: <em>Nhập điểm KTĐK</em> (1-10, số nguyên) — Chỉ Toán + T.Việt. Khối 1-3: CK1+CN; Khối 4-5: cả 4 kỳ</li>
+      <li><strong>Bước 6</strong>: Nhấn <strong>Lưu lên Sheets</strong>. Nút <strong>Xếp loại CN</strong> tự động tính HTXS/HTT/HT/CHT theo Điều 9 TT27</li>
+    </ul>
+    <p><strong>Nhận xét</strong>: Click nút ✏️ mỗi dòng → mở modal chi tiết → chọn từ <em>Ngân hàng nhận xét mẫu</em> hoặc nhấn <em>🤖 AI Nhận xét</em> để tự động tạo.</p>
+    <p><strong>Xuất/Nhập Excel</strong>: Nút <em>Xuất mẫu</em> tải file Excel có sẵn danh sách HS + cột môn. GV nhập trên Excel rồi <em>Nhập từ Excel</em> upload lại.</p>
   </div>
 
-  <div class="gd-sec" id="gd4"><h3><span class="gd-num">4</span> Sổ Chủ nhiệm & Chất lượng</h3>
-    <p><strong>Sổ Chủ nhiệm:</strong> Hiển thị thẻ card cho từng lớp gồm tên lớp, khối, GVCN, sĩ số nam/nữ và nút mở sổ trên Drive. Lọc theo khối 1→5.</p>
-    <p><strong>Quản lý chất lượng:</strong> Bảng thống kê kết quả học tập theo chuẩn TT27/2020 — môn học dùng HTT/HT/CHT, năng lực-phẩm chất dùng T/H/C. Chọn kỳ (GK1/CK1/GK2/CN) để xem kết quả tương ứng.</p>
-    <div class="gd-note"><strong>💡 Lưu ý:</strong> Dữ liệu 3 trang mới (Sổ CN, QL Chất lượng, Học bạ) chỉ đọc từ web — quản trị viên chỉnh sửa trực tiếp trên Google Trang tính.</div>
+  <div class="gd-sec" id="gd4"><h3><span class="gd-num">4</span> Sổ Chủ nhiệm</h3>
+    <p>GVCN đăng nhập → thấy danh sách lớp theo khối → click vào lớp → trang chi tiết với:</p>
+    <ul>
+      <li><strong>Sidebar trái</strong>: avatar lớp, tên GVCN, sĩ số, menu (Tổng quan / Danh sách HS / Thống kê)</li>
+      <li><strong>3 card thống kê</strong>: Sĩ số (Nam/Nữ) | GVCN | Năm học</li>
+      <li><strong>Thông tin lớp</strong>: bảng (Trường, Lớp, GVCN, Sĩ số, Địa chỉ)</li>
+      <li><strong>Danh sách HS</strong>: bảng đầy đủ (TT, Họ tên, Ngày sinh, Giới tính, Dân tộc, Phụ huynh, SĐT). Click tên HS → xem Học bạ</li>
+    </ul>
   </div>
 
   <div class="gd-sec" id="gd5"><h3><span class="gd-num">5</span> Học bạ số</h3>
-    <p>Trang Học bạ số cho phép tìm kiếm học sinh theo tên, mã hoặc lớp. Mỗi học sinh là một thẻ card gồm thông tin cá nhân, phụ huynh, và nút mở học bạ trên Drive.</p>
+    <p>Tra cứu học bạ của 445 học sinh. Tìm theo tên, mã HS hoặc lọc theo lớp. Click vào tên → modal học bạ chi tiết:</p>
+    <ul>
+      <li><strong>Header tím</strong>: Họ tên, Lớp, Ngày sinh, Giới tính</li>
+      <li><strong>4 ô thông tin</strong>: Chiều cao, Cân nặng, Nghỉ có phép, Nghỉ không phép</li>
+      <li><strong>Bảng Môn học</strong>: Mức đạt (badge T/H/C) + Điểm KTĐK + Nhận xét (input)</li>
+      <li><strong>Bảng NL & PC</strong>: 3 năng lực + 5 phẩm chất</li>
+      <li><strong>4 nút</strong>: Đóng | Xuất Word | 🤖 AI Nhận xét | Lưu</li>
+    </ul>
   </div>
 
-  <div class="gd-sec" id="gd6"><h3><span class="gd-num">6</span> Hỏi & Đáp thường gặp</h3>
-    <p><strong>❓ Vì sao có hồ sơ không thấy nút Mở?</strong></p>
-    <p>Hồ sơ đó chưa được cập nhật lên Google Drive. Chấm trạng thái sẽ có màu xám thay vì xanh, và nút sẽ hiện chữ "Chưa có".</p>
-    <p><strong>❓ Làm sao tìm nhanh một hồ sơ?</strong></p>
-    <p>Dùng ô tìm kiếm ở đầu trang Hồ sơ số. Gõ từ khóa trong tên hoặc mã (ví dụ "thi đua", "1.2.1") — danh sách sẽ tự lọc.</p>
+  <div class="gd-sec" id="gd6"><h3><span class="gd-num">6</span> Phân quyền giáo viên</h3>
+    <p>Hệ thống phân quyền qua 3 cột trong sheet <strong>GIAO_VIEN</strong>:</p>
+    <ul>
+      <li><strong>Mat_khau</strong>: mật khẩu đăng nhập riêng (VD: gv_1a, gv_nn, admin)</li>
+      <li><strong>Mon_day</strong>: môn được phép nhập (ALL = tất cả, hoặc tên môn cụ thể)</li>
+      <li><strong>Lop_day</strong>: lớp được phép thấy (ALL = tất cả, hoặc danh sách lớp: 1A,2A,3A)</li>
+    </ul>
+    <p>GVCN (Mon_day=ALL, Lop_day=1 lớp): nhập tất cả môn + NL/PC cho lớp mình. GV bộ môn (Mon_day=Ngoại ngữ): chỉ cột Ngoại ngữ sáng, các cột khác mờ khóa. Admin: tất cả.</p>
+  </div>
+
+  <div class="gd-sec" id="gd7"><h3><span class="gd-num">7</span> Hỏi & Đáp thường gặp</h3>
     <p><strong>❓ Xem trên điện thoại được không?</strong></p>
-    <p>Được. Giao diện tự điều chỉnh cho màn hình nhỏ, menu sẽ thu gọn thành nút ☰ ở góc phải.</p>
-    <p><strong>❓ Dữ liệu cập nhật thế nào?</strong></p>
-    <p>Mọi thông tin được lưu trên Google Sheet. Khi cán bộ nhà trường cập nhật sheet, chỉ cần reload trang web (F5) là thấy ngay.</p>
-    <p><strong>❓ Mở hồ sơ trên Drive cần đăng nhập không?</strong></p>
-    <p>Tùy quyền chia sẻ mà nhà trường đặt. Nếu folder để ở chế độ "Bất kỳ ai có link" thì không cần đăng nhập; nếu để chế độ riêng tư thì cần tài khoản được cấp quyền.</p>
+    <p>Được. Giao diện tự responsive. Trang nhập điểm chuyển sang dạng <strong>card từng HS</strong> trên mobile, rất thuận tiện.</p>
+    <p><strong>❓ Admin đã đăng nhập ở Quản trị, vào QL CL có phải đăng nhập lại không?</strong></p>
+    <p>Không. Hệ thống tự nhận diện admin đã xác thực và bypass form đăng nhập.</p>
+    <p><strong>❓ Điểm KTĐK nhập thang mấy?</strong></p>
+    <p>Số nguyên từ <strong>1 đến 10</strong> (đúng chuẩn SMAS và TT27). Khối 1-3: chỉ CK1 + CN. Khối 4-5: cả 4 kỳ.</p>
+    <p><strong>❓ Xếp loại cuối năm tự động như thế nào?</strong></p>
+    <p>Chọn kỳ CN → nhấn nút <strong>🪄 Xếp loại CN</strong> → hệ thống tự tính theo Điều 9 TT27: HTXS (≥9 điểm), HTT (≥7), HT (≥5), CHT.</p>
+    <p><strong>❓ Dữ liệu lưu ở đâu?</strong></p>
+    <p>Google Sheets. Khi GV nhấn Lưu, dữ liệu ghi trực tiếp vào sheet DIEM. Reload trang (F5) để đồng bộ lại.</p>
   </div>
 
 </div></div></section><footer class="ft"><p>📚 Hồ sơ số Trường Tiểu học</p><p class="cr">Thiết kế: Chung Trần</p></footer></div>
