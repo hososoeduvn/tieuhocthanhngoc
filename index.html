@@ -375,6 +375,51 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 .hb-card .hb-btn:hover{background:var(--p);color:#fff}
 .hb-card .hb-btn.no{opacity:.5;cursor:not-allowed}
 
+
+/* === Auth login box === */
+.auth-box{background:#fff;border-radius:24px;padding:40px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.08);text-align:center}
+.auth-ico{width:80px;height:80px;background:var(--pbg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.auth-box h3{font-size:22px;color:var(--tx);margin-bottom:6px}
+.auth-box p{font-size:14px;color:var(--tm);margin-bottom:24px}
+.auth-f{text-align:left;margin-bottom:14px}
+.auth-f label{display:block;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:6px}
+.auth-f input{width:100%;padding:12px 16px;border:2px solid var(--bg2);border-radius:12px;font-size:14px;transition:all .2s;font-family:inherit}
+.auth-f input:focus{outline:none;border-color:var(--p);background:#fff}
+.auth-pw{position:relative}
+.auth-pw input{padding-right:44px}
+.auth-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tm);cursor:pointer;padding:6px;font-size:16px}
+.auth-eye:hover{color:var(--p)}
+/* === SCN Detail (giống Diễn Liên) === */
+.scn-detail-layout{display:flex;min-height:100vh}
+.scn-detail-sidebar{width:240px;background:#fff;border-right:1px solid #e2e8f0;padding-top:80px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:50}
+.scn-detail-main{flex:1;margin-left:240px;padding:90px 30px 40px;background:var(--bg)}
+.scn-avatar{width:64px;height:64px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;margin:0 auto 10px}
+.scn-sb-info{text-align:center;padding:16px;border-bottom:1px solid #f1f5f9}
+.scn-sb-info h4{font-size:15px;color:var(--tx);margin-bottom:2px}
+.scn-sb-info p{font-size:12px;color:var(--tm)}
+.scn-sb-menu{padding:12px 0}
+.scn-sb-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:600;color:var(--tm);cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.scn-sb-item:hover{background:var(--pbg);color:var(--p)}
+.scn-sb-item.active{background:var(--pbg);color:var(--p);border-right:3px solid var(--p)}
+.scn-sb-item i{width:18px;text-align:center}
+.scn-info-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.scn-info-card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.scn-info-card .sic-icon{font-size:28px;margin-bottom:8px}
+.scn-info-card .sic-label{font-size:12px;color:var(--tm)}
+.scn-info-card .sic-value{font-size:24px;font-weight:800;color:var(--tx)}
+.scn-info-card .sic-sub{font-size:11px;color:var(--tm);margin-top:2px}
+.scn-class-info{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.04);margin-bottom:24px}
+.scn-class-info h4{margin-bottom:14px;color:var(--tx);display:flex;align-items:center;gap:8px}
+.scn-class-info table{width:100%;font-size:14px}
+.scn-class-info td{padding:8px 0;color:var(--tm);border-bottom:1px solid #f8fafc}
+.scn-class-info td:first-child{font-weight:600;color:var(--tx);width:120px}
+.scn-quick-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.scn-qn{background:#fff;border-radius:14px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.03);border:2px solid transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--tx)}
+.scn-qn:hover{border-color:var(--p);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.scn-qn i,.scn-qn span{display:block}
+.scn-qn i{font-size:22px;margin-bottom:8px;color:var(--p)}
+@media(max-width:768px){.scn-detail-sidebar{width:100%;position:relative;top:auto;bottom:auto;padding-top:10px}.scn-detail-main{margin-left:0;padding:20px 16px}.scn-detail-layout{flex-direction:column}.scn-info-cards{grid-template-columns:1fr}.scn-quick-nav{grid-template-columns:1fr 1fr}}
+
 .th-btn{display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--bg2);background:#fff;border-radius:14px;cursor:pointer;text-align:left;transition:var(--tr);font-family:inherit}
 .th-btn:hover{border-color:var(--p);transform:translateY(-2px);box-shadow:var(--sh)}
 .th-btn.active{border-color:var(--p);background:rgba(var(--p-rgb),.06);box-shadow:0 0 0 3px rgba(var(--p-rgb),.12)}
@@ -397,7 +442,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
     <li><button class="mn-l" data-page="hdsd" onclick="go('hdsd')"><i class="fas fa-circle-info"></i> Hướng dẫn</button></li>
     <li><button class="mn-l" data-page="admin" onclick="go('admin')"><i class="fas fa-gear"></i> Quản trị</button></li>
     <li class="mn-mob"><button class="mn-l" data-page="scn" onclick="go('scn')"><i class="fas fa-book"></i> Sổ Chủ nhiệm</button></li>
-    <li class="mn-mob"><button class="mn-l" data-page="cl" onclick="go('cl')"><i class="fas fa-chart-line"></i> Chất lượng</button></li>
+    <li class="mn-mob"><button class="mn-l" data-page="cl" onclick="go('cl')"><i class="fas fa-chart-line"></i> QL Chất lượng</button></li>
     <li class="mn-mob"><button class="mn-l" data-page="hb" onclick="go('hb')"><i class="fas fa-graduation-cap"></i> Học bạ số</button></li>
     <li class="mn-mob"><button class="mn-l" data-page="gv" onclick="go('gv')"><i class="fas fa-user-tie"></i> Năng lực GV</button></li>
     <li class="mn-mob"><button class="mn-l" data-page="lop" onclick="go('lop')"><i class="fas fa-school"></i> Các lớp học</button></li>
@@ -418,7 +463,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
   <div class="hero-vis"><div class="h-cards h-cards-full">
     <div class="h-card" onclick="go('hoso')"><div class="h-card-i hci1">📁</div><h4>Hồ sơ số</h4><p id="hHoSoCount">102 danh mục</p></div>
     <div class="h-card" onclick="go('scn')"><div class="h-card-i hci2">📘</div><h4>Sổ Chủ nhiệm</h4><p>Quản lý theo lớp</p></div>
-    <div class="h-card" onclick="go('cl')"><div class="h-card-i hci3">📊</div><h4>Chất lượng</h4><p>Theo chuẩn TT27</p></div>
+    <div class="h-card" onclick="go('cl')"><div class="h-card-i hci3">📊</div><h4>Quản lý CL</h4><p>Theo chuẩn TT27</p></div>
     <div class="h-card" onclick="go('hb')"><div class="h-card-i hci4">🎓</div><h4>Học bạ số</h4><p>Chính xác, kịp thời</p></div>
     <div class="h-card" onclick="go('gv')"><div class="h-card-i" style="background:linear-gradient(135deg,#10B981,#059669)">👩‍🏫</div><h4>Năng lực GV</h4><p>Đội ngũ tận tâm</p></div>
     <div class="h-card" onclick="go('lop')"><div class="h-card-i" style="background:linear-gradient(135deg,#F59E0B,#D97706)">🏫</div><h4>Các lớp học</h4><p>Thông tin lớp</p></div>
@@ -501,19 +546,60 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 </div></section><footer class="ft"><p id="ftText4">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
 
 <!-- ==================== SỔ CHỦ NHIỆM ==================== -->
-<div class="pg" id="pg-scn"><section class="sec" style="padding-top:100px"><div class="ctn">
-  <div class="sec-h"><div class="badge b-p"><i class="fas fa-book"></i> Sổ Chủ nhiệm</div><h2 class="sec-t">Sổ chủ nhiệm các lớp</h2></div>
-  <div class="scn-filter" id="scnFilter"></div>
-  <div class="scn-grid" id="scnGrid"></div>
-</div></section><footer class="ft"><p id="ftText5">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
+<div class="pg" id="pg-scn">
+  <!-- Login gate -->
+  <div id="scnLoginGate" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="auth-box">
+      <div class="auth-ico"><i class="fas fa-book" style="font-size:36px;color:var(--p)"></i></div>
+      <h3>Sổ Chủ nhiệm</h3>
+      <p>Đăng nhập để xem và quản lý sổ chủ nhiệm</p>
+      <div class="auth-f"><label>Họ và tên</label><input id="scnName" placeholder="Nhập họ tên..."></div>
+      <div class="auth-f"><label>Mật khẩu</label><div class="auth-pw"><input type="password" id="scnPw" placeholder="Mật khẩu lớp hoặc admin" onkeydown="if(event.key==='Enter')scnLogin()"><button class="auth-eye" onclick="togglePw('scnPw')"><i class="fas fa-eye"></i></button></div></div>
+      <div id="scnLoginMsg" class="adm-msg"></div>
+      <button class="btn btn-p" onclick="scnLogin()" style="width:100%;justify-content:center"><i class="fas fa-sign-in-alt"></i> Đăng nhập</button>
+    </div>
+  </div>
+  <!-- Content (hidden until login) -->
+  <div id="scnContent" style="display:none">
+    <div id="scnMainView">
+      <section class="sec" style="padding-top:100px"><div class="ctn">
+        <div class="sec-h"><div class="badge b-p"><i class="fas fa-book"></i> Sổ Chủ nhiệm</div><h2 class="sec-t">Sổ chủ nhiệm các lớp</h2></div>
+        <div class="scn-filter" id="scnFilter"></div>
+        <div class="scn-grid" id="scnGrid"></div>
+      </div></section>
+    </div>
+    <!-- Chi tiết lớp (NV2) -->
+    <div id="scnDetailView" style="display:none">
+      <div class="scn-detail-layout">
+        <div class="scn-detail-sidebar" id="scnSidebar"></div>
+        <div class="scn-detail-main" id="scnMain"></div>
+      </div>
+    </div>
+  </div><footer class="ft"><p id="ftText5">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
 
-<!-- ==================== CHẤT LƯỢNG ==================== -->
-<div class="pg" id="pg-cl"><section class="sec" style="padding-top:100px"><div class="ctn">
-  <div class="sec-h"><div class="badge b-s"><i class="fas fa-chart-line"></i> Quản lý chất lượng</div><h2 class="sec-t">Chất lượng giáo dục</h2></div>
-  <div class="cl-tabs" id="clTabs"></div>
-  <div class="cl-summary" id="clSummary"></div>
-  <div id="clContent"></div>
-</div></section><footer class="ft"><p id="ftText6">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
+<!-- ==================== QUẢN LÝ CHẤT LƯỢNG ==================== -->
+<div class="pg" id="pg-cl">
+  <!-- Login gate -->
+  <div id="clLoginGate" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="auth-box">
+      <div class="auth-ico"><i class="fas fa-chart-line" style="font-size:36px;color:var(--p)"></i></div>
+      <h3>Quản lý chất lượng</h3>
+      <p>Đăng nhập để xem kết quả đánh giá</p>
+      <div class="auth-f"><label>Họ và tên</label><input id="clName" placeholder="Nhập họ tên..."></div>
+      <div class="auth-f"><label>Mật khẩu</label><div class="auth-pw"><input type="password" id="clPw" placeholder="Mật khẩu" onkeydown="if(event.key==='Enter')clLogin()"><button class="auth-eye" onclick="togglePw('clPw')"><i class="fas fa-eye"></i></button></div></div>
+      <div id="clLoginMsg" class="adm-msg"></div>
+      <button class="btn btn-p" onclick="clLogin()" style="width:100%;justify-content:center"><i class="fas fa-sign-in-alt"></i> Đăng nhập</button>
+    </div>
+  </div>
+  <!-- Content -->
+  <div id="clContent2" style="display:none">
+    <section class="sec" style="padding-top:100px"><div class="ctn">
+      <div class="sec-h"><div class="badge b-s"><i class="fas fa-chart-line"></i> Quản lý chất lượng</div><h2 class="sec-t">Chất lượng giáo dục</h2></div>
+      <div class="cl-tabs" id="clTabs"></div>
+      <div class="cl-summary" id="clSummary"></div>
+      <div id="clContent"></div>
+    </div></section>
+  </div><footer class="ft"><p id="ftText6">Hồ sơ số - Trường Tiểu học Thanh Ngọc</p><p class="cr">Thiết kế: Chung Trần – Zalo 0913031073</p></footer></div>
 
 <!-- ==================== HỌC BẠ SỐ ==================== -->
 <div class="pg" id="pg-hb"><section class="sec" style="padding-top:100px"><div class="ctn">
@@ -588,14 +674,14 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
     <a href="#gd1">1. Trang chủ</a>
     <a href="#gd2">2. Hồ sơ số</a>
     <a href="#gd3">3. Năng lực GV</a>
-    <a href="#gd4">4. Sổ CN & Chất lượng</a>
+    <a href="#gd4">4. Sổ CN & QL Chất lượng</a>
     <a href="#gd5">5. Học bạ số</a>
     <a href="#gd6">6. Hỏi & Đáp</a>
   </div>
 
   <div class="gd-sec" id="gd1"><h3><span class="gd-num">1</span> Trang chủ</h3>
-    <p>Trang chủ là nơi bạn thấy tổng quan về trường. Phía trên cùng là <strong>thanh menu</strong> gồm 9 mục: Trang chủ, Hồ sơ số, Sổ CN, Chất lượng, Học bạ số, Năng lực GV, Các lớp học, Hướng dẫn, Quản trị. Trên điện thoại, menu thu gọn thành nút ☰.</p>
-    <div class="gd-fig"><svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="680" height="45" rx="10" fill="#fff" stroke="var(--p)" stroke-width="2"/><circle cx="40" cy="32" r="14" fill="var(--p)"/><text x="65" y="37" font-size="13" font-weight="700" fill="#1A2744">Tên trường</text><rect x="200" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="228" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Trang chủ</text><rect x="260" y="20" width="55" height="25" rx="6" fill="var(--p)"/><text x="288" y="37" font-size="9" text-anchor="middle" fill="#fff" font-weight="600">Hồ sơ số</text><rect x="320" y="20" width="45" height="25" rx="6" fill="#EEF2FF"/><text x="343" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Sổ CN</text><rect x="370" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="398" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Chất lượng</text><rect x="430" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="458" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Học bạ số</text><rect x="490" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="518" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">GV</text><rect x="550" y="20" width="50" height="25" rx="6" fill="#EEF2FF"/><text x="575" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Lớp học</text><rect x="605" y="20" width="35" height="25" rx="6" fill="#EEF2FF"/><text x="623" y="37" font-size="8" text-anchor="middle" fill="var(--p)" font-weight="600">HD</text><rect x="645" y="20" width="35" height="25" rx="6" fill="#EEF2FF"/><text x="663" y="37" font-size="8" text-anchor="middle" fill="var(--p)" font-weight="600">QT</text><rect x="10" y="75" width="680" height="130" rx="14" fill="#F0F5FF"/><text x="350" y="115" font-size="22" text-anchor="middle" fill="var(--p)" font-weight="700">Slideshow + Giới thiệu trường</text><text x="350" y="145" font-size="13" text-anchor="middle" fill="#5A6E8A">Ảnh trường, tên, địa chỉ, số liệu tổng quan</text><rect x="60" y="160" width="140" height="35" rx="8" fill="var(--p)"/><text x="130" y="182" font-size="12" text-anchor="middle" fill="#fff" font-weight="600">Hồ sơ số →</text><rect x="220" y="160" width="140" height="35" rx="8" fill="#fff" stroke="var(--p)" stroke-width="2"/><text x="290" y="182" font-size="12" text-anchor="middle" fill="var(--p)" font-weight="600">Đội ngũ GV →</text></svg><div class="gd-cap">Bố cục trang chủ: Menu 9 mục trên cùng + Slideshow giới thiệu</div></div>
+    <p>Trang chủ là nơi bạn thấy tổng quan về trường. Phía trên cùng là <strong>thanh menu</strong> gồm 9 mục: Trang chủ, Hồ sơ số, Sổ CN, QL Chất lượng, Học bạ số, Năng lực GV, Các lớp học, Hướng dẫn, Quản trị. Trên điện thoại, menu thu gọn thành nút ☰.</p>
+    <div class="gd-fig"><svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="680" height="45" rx="10" fill="#fff" stroke="var(--p)" stroke-width="2"/><circle cx="40" cy="32" r="14" fill="var(--p)"/><text x="65" y="37" font-size="13" font-weight="700" fill="#1A2744">Tên trường</text><rect x="200" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="228" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Trang chủ</text><rect x="260" y="20" width="55" height="25" rx="6" fill="var(--p)"/><text x="288" y="37" font-size="9" text-anchor="middle" fill="#fff" font-weight="600">Hồ sơ số</text><rect x="320" y="20" width="45" height="25" rx="6" fill="#EEF2FF"/><text x="343" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Sổ CN</text><rect x="370" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="398" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Quản lý CL</text><rect x="430" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="458" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Học bạ số</text><rect x="490" y="20" width="55" height="25" rx="6" fill="#EEF2FF"/><text x="518" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">GV</text><rect x="550" y="20" width="50" height="25" rx="6" fill="#EEF2FF"/><text x="575" y="37" font-size="9" text-anchor="middle" fill="var(--p)" font-weight="600">Lớp học</text><rect x="605" y="20" width="35" height="25" rx="6" fill="#EEF2FF"/><text x="623" y="37" font-size="8" text-anchor="middle" fill="var(--p)" font-weight="600">HD</text><rect x="645" y="20" width="35" height="25" rx="6" fill="#EEF2FF"/><text x="663" y="37" font-size="8" text-anchor="middle" fill="var(--p)" font-weight="600">QT</text><rect x="10" y="75" width="680" height="130" rx="14" fill="#F0F5FF"/><text x="350" y="115" font-size="22" text-anchor="middle" fill="var(--p)" font-weight="700">Slideshow + Giới thiệu trường</text><text x="350" y="145" font-size="13" text-anchor="middle" fill="#5A6E8A">Ảnh trường, tên, địa chỉ, số liệu tổng quan</text><rect x="60" y="160" width="140" height="35" rx="8" fill="var(--p)"/><text x="130" y="182" font-size="12" text-anchor="middle" fill="#fff" font-weight="600">Hồ sơ số →</text><rect x="220" y="160" width="140" height="35" rx="8" fill="#fff" stroke="var(--p)" stroke-width="2"/><text x="290" y="182" font-size="12" text-anchor="middle" fill="var(--p)" font-weight="600">Đội ngũ GV →</text></svg><div class="gd-cap">Bố cục trang chủ: Menu 9 mục trên cùng + Slideshow giới thiệu</div></div>
     <ul><li><strong>Slideshow</strong>: các ảnh đại diện của trường luân chuyển tự động</li><li><strong>Card thống kê</strong>: số hồ sơ, số giáo viên, số lớp, số học sinh — cập nhật realtime từ dữ liệu</li><li><strong>Nút Hồ sơ số</strong>: đi nhanh tới danh mục hồ sơ</li></ul>
   </div>
 
@@ -615,8 +701,8 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 
   <div class="gd-sec" id="gd4"><h3><span class="gd-num">4</span> Sổ Chủ nhiệm & Chất lượng</h3>
     <p><strong>Sổ Chủ nhiệm:</strong> Hiển thị thẻ card cho từng lớp gồm tên lớp, khối, GVCN, sĩ số nam/nữ và nút mở sổ trên Drive. Lọc theo khối 1→5.</p>
-    <p><strong>Chất lượng:</strong> Bảng thống kê kết quả học tập theo chuẩn TT27/2020 — môn học dùng HTT/HT/CHT, năng lực-phẩm chất dùng T/H/C. Chọn kỳ (GK1/CK1/GK2/CN) để xem kết quả tương ứng.</p>
-    <div class="gd-note"><strong>💡 Lưu ý:</strong> Dữ liệu 3 trang mới (Sổ CN, Chất lượng, Học bạ) chỉ đọc từ web — quản trị viên chỉnh sửa trực tiếp trên Google Trang tính.</div>
+    <p><strong>Quản lý chất lượng:</strong> Bảng thống kê kết quả học tập theo chuẩn TT27/2020 — môn học dùng HTT/HT/CHT, năng lực-phẩm chất dùng T/H/C. Chọn kỳ (GK1/CK1/GK2/CN) để xem kết quả tương ứng.</p>
+    <div class="gd-note"><strong>💡 Lưu ý:</strong> Dữ liệu 3 trang mới (Sổ CN, QL Chất lượng, Học bạ) chỉ đọc từ web — quản trị viên chỉnh sửa trực tiếp trên Google Trang tính.</div>
   </div>
 
   <div class="gd-sec" id="gd5"><h3><span class="gd-num">5</span> Học bạ số</h3>
@@ -1066,7 +1152,7 @@ function scnShowKhoi(khoi) {
     const scn = (D.soChuNhiem||[]).find(s => String(s.Ma_lop)===l.lop);
     const gvcn = scn ? (scn.GVCN||'Chưa phân công') : 'Chưa phân công';
     const lk = scn ? (scn.Link_so||'') : '';
-    html += '<div class="scn-card"><h4>Lớp '+l.lop+'</h4><div class="scn-meta">Khối '+khoi+' • GVCN: '+gvcn+'</div><div class="scn-nums"><span><i class="fas fa-users"></i> '+l.ss+'</span><span><i class="fas fa-mars"></i> '+l.nam+'</span><span><i class="fas fa-venus"></i> '+l.nu+'</span></div>'+(lk?'<a class="scn-btn" href="'+lk+'" target="_blank"><i class="fas fa-external-link-alt"></i> Mở sổ</a>':'<span class="scn-btn" style="opacity:.4;cursor:not-allowed"><i class="fas fa-folder"></i> Chưa có</span>')+'</div>';
+    html += '<div class="scn-card" style="cursor:pointer" onclick="scnOpenDetail(&#39;'+l.lop+'&#39;)"><h4>Lớp '+l.lop+'</h4><div class="scn-meta">Khối '+khoi+' • GVCN: '+gvcn+'</div><div class="scn-nums"><span><i class="fas fa-users"></i> '+l.ss+'</span><span><i class="fas fa-mars"></i> '+l.nam+'</span><span><i class="fas fa-venus"></i> '+l.nu+'</span></div><span class="scn-btn"><i class="fas fa-arrow-right"></i> Xem chi tiết</span></div>';
   });
   html += '</div>';
   document.getElementById('scnKhoiDetail').innerHTML = html;
@@ -1342,6 +1428,103 @@ async function admChangePw(){
       msg.className='adm-msg err';msg.textContent=j.error||'Đổi thất bại';
     }
   }catch(e){msg.className='adm-msg err';msg.textContent='Lỗi: '+e.message;}
+}
+
+// ===== TOGGLE PASSWORD EYE =====
+function togglePw(inputId) {
+  const inp = document.getElementById(inputId);
+  const icon = inp.parentElement.querySelector('.auth-eye i');
+  if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+  else { inp.type = 'password'; icon.className = 'fas fa-eye'; }
+}
+
+// ===== SCN LOGIN + DETAIL =====
+let scnAuth = null;
+let scnMyLop = '';
+let scnMyRole = '';
+async function scnLogin() {
+  const name = document.getElementById('scnName').value.trim();
+  const pw = document.getElementById('scnPw').value.trim();
+  const msg = document.getElementById('scnLoginMsg');
+  if (!name || !pw) { msg.className='adm-msg err'; msg.textContent='Vui lòng nhập đầy đủ'; return; }
+  msg.textContent='Đang kiểm tra...';
+  try {
+    const r = await api({action:'loginGV',password:pw});
+    if (r.success) {
+      scnAuth = pw; scnMyLop = r.lop||''; scnMyRole = r.role;
+      document.getElementById('scnLoginGate').style.display='none';
+      document.getElementById('scnContent').style.display='block';
+      renderSoChuNhiem();
+    } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai mật khẩu'; }
+  } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
+}
+
+function scnOpenDetail(lop) {
+  document.getElementById('scnMainView').style.display='none';
+  document.getElementById('scnDetailView').style.display='block';
+  const khoi = lop[0];
+  const hsByLop = getHSByLop();
+  const students = hsByLop[lop]||[];
+  const scn = (D.soChuNhiem||[]).find(s=>String(s.Ma_lop)===lop)||{};
+  const gvcn = scn.GVCN||'Chưa phân công';
+  const nam = students.filter(h=>h.Gioi_tinh==='Nam').length;
+  const nu = students.length - nam;
+  const t = D.thongTin||{};
+
+  // Sidebar
+  document.getElementById('scnSidebar').innerHTML = '<div style="padding:12px;border-bottom:1px solid #f1f5f9"><button onclick="scnBackToList()" style="background:none;border:none;color:var(--p);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit"><i class="fas fa-arrow-left"></i> ← Khối '+khoi+'</button></div><div class="scn-sb-info"><div class="scn-avatar">'+lop+'</div><h4>Lớp '+lop+'</h4><p>'+gvcn+'</p><p style="font-size:11px;color:var(--p);font-weight:700">'+students.length+' học sinh</p></div><div class="scn-sb-menu"><button class="scn-sb-item active" onclick="scnTab(this,\'overview\',\''+lop+'\')"><i class="fas fa-home"></i> Tổng quan</button><button class="scn-sb-item" onclick="scnTab(this,\'dshs\',\''+lop+'\')"><i class="fas fa-list"></i> Danh sách HS</button><button class="scn-sb-item" onclick="scnTab(this,\'thongke\',\''+lop+'\')"><i class="fas fa-chart-bar"></i> Thống kê</button></div>';
+
+  // Main content - Overview
+  scnTab(null, 'overview', lop);
+}
+function scnTab(btn, tab, lop) {
+  if (btn) { document.querySelectorAll('.scn-sb-item').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+  const main = document.getElementById('scnMain');
+  const hsByLop = getHSByLop();
+  const students = hsByLop[lop]||[];
+  const scn = (D.soChuNhiem||[]).find(s=>String(s.Ma_lop)===lop)||{};
+  const gvcn = scn.GVCN||'Chưa phân công';
+  const nam = students.filter(h=>h.Gioi_tinh==='Nam').length;
+  const nu = students.length - nam;
+  const t = D.thongTin||{};
+
+  if (tab === 'overview') {
+    main.innerHTML = '<div style="font-size:13px;color:var(--tm);margin-bottom:16px"><a href="#" onclick="scnBackToList();return false" style="color:var(--p)">Trang chủ</a> → Khối '+lop[0]+' → <strong>Lớp '+lop+'</strong></div><h2 style="color:var(--tx);margin-bottom:20px">📘 Sổ Chủ Nhiệm - Lớp '+lop+'</h2><div class="scn-info-cards"><div class="scn-info-card"><div class="sic-icon">👨‍🎓</div><div class="sic-label">Sĩ số</div><div class="sic-value">'+students.length+'</div><div class="sic-sub">Nam: '+nam+' | Nữ: '+nu+'</div></div><div class="scn-info-card"><div class="sic-icon">👩‍🏫</div><div class="sic-label">GVCN</div><div class="sic-value" style="font-size:18px">'+gvcn+'</div><div class="sic-sub">Lớp '+lop+'</div></div><div class="scn-info-card"><div class="sic-icon">📅</div><div class="sic-label">Năm học</div><div class="sic-value" style="font-size:20px">'+(t.nam_hoc||'2025-2026')+'</div><div class="sic-sub">Học kỳ I + II</div></div></div><div class="scn-class-info"><h4><i class="fas fa-info-circle" style="color:var(--p)"></i> Thông tin lớp</h4><table><tr><td>Trường:</td><td>'+(t.ten_truong||'').toUpperCase()+'</td><td style="width:80px">Lớp:</td><td>'+lop+'</td></tr><tr><td>GVCN:</td><td>'+gvcn+'</td><td>Sĩ số:</td><td>'+students.length+' học sinh</td></tr><tr><td>Năm học:</td><td>'+(t.nam_hoc||'2025-2026')+'</td><td>Địa chỉ:</td><td>'+(t.dia_chi||'')+'</td></tr></table></div><div class="scn-quick-nav"><button class="scn-qn" onclick="scnTab(null,\'dshs\',\''+lop+'\')"><i class="fas fa-list-alt"></i><span>Danh sách HS</span></button><button class="scn-qn" onclick="scnTab(null,\'thongke\',\''+lop+'\')"><i class="fas fa-chart-pie"></i><span>Thống kê</span></button><button class="scn-qn" onclick="go(\'cl\')"><i class="fas fa-chart-line"></i><span>Chất lượng</span></button><button class="scn-qn" onclick="go(\'hb\')"><i class="fas fa-graduation-cap"></i><span>Học bạ số</span></button></div>';
+  } else if (tab === 'dshs') {
+    let html = '<div style="font-size:13px;color:var(--tm);margin-bottom:16px"><a href="#" onclick="scnBackToList();return false" style="color:var(--p)">Trang chủ</a> → Lớp '+lop+' → <strong>Danh sách HS</strong></div><h3 style="margin-bottom:16px;color:var(--tx)">📋 Danh sách học sinh Lớp '+lop+' ('+students.length+' HS)</h3>';
+    html += '<table class="cl-table"><thead><tr><th>TT</th><th>Họ tên</th><th>Ngày sinh</th><th>Giới tính</th><th>Dân tộc</th><th>Chỗ ở</th><th>PH</th><th>SĐT</th></tr></thead><tbody>';
+    students.forEach((hs,i) => {
+      html += '<tr><td>'+(i+1)+'</td><td style="text-align:left;font-weight:600;cursor:pointer;color:var(--p)" onclick="viewHocBa(\''+hs.Ma_HS+'\')">'+hs.Ho_ten+'</td><td>'+hs.Ngay_sinh+'</td><td>'+hs.Gioi_tinh+'</td><td>'+(hs.Dan_toc||'')+'</td><td style="text-align:left">'+(hs.Cho_o||'')+'</td><td style="text-align:left;font-size:11px">'+(hs.Ho_ten_cha||hs.Ho_ten_me||'')+'</td><td>'+(hs.SDT||'')+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    main.innerHTML = html;
+  } else if (tab === 'thongke') {
+    main.innerHTML = '<div style="font-size:13px;color:var(--tm);margin-bottom:16px"><a href="#" onclick="scnBackToList();return false" style="color:var(--p)">Trang chủ</a> → Lớp '+lop+' → <strong>Thống kê</strong></div><h3 style="margin-bottom:16px;color:var(--tx)">📊 Thống kê lớp '+lop+'</h3><div class="cl-summary"><div class="cl-card"><div class="cl-num" style="color:#3b82f6">'+students.length+'</div><div class="cl-label">Tổng HS</div></div><div class="cl-card"><div class="cl-num" style="color:#2563eb">'+nam+'</div><div class="cl-label">Nam</div></div><div class="cl-card"><div class="cl-num" style="color:#ec4899">'+nu+'</div><div class="cl-label">Nữ</div></div><div class="cl-card"><div class="cl-num" style="color:#10b981">'+(students.filter(h=>h.Dan_toc==='Kinh').length)+'</div><div class="cl-label">Kinh</div></div></div><p style="color:var(--tm);margin-top:20px;text-align:center">Xem chi tiết chất lượng tại trang <a href="#" onclick="go(\'cl\');return false" style="color:var(--p);font-weight:700">Quản lý chất lượng</a></p>';
+  }
+}
+function scnBackToList() {
+  document.getElementById('scnDetailView').style.display='none';
+  document.getElementById('scnMainView').style.display='block';
+}
+
+// ===== CL LOGIN =====
+let clAuth = null;
+let clMyLop = '';
+async function clLogin() {
+  const name = document.getElementById('clName').value.trim();
+  const pw = document.getElementById('clPw').value.trim();
+  const msg = document.getElementById('clLoginMsg');
+  if (!name || !pw) { msg.className='adm-msg err'; msg.textContent='Vui lòng nhập đầy đủ'; return; }
+  msg.textContent='Đang kiểm tra...';
+  try {
+    const r = await api({action:'loginGV',password:pw});
+    if (r.success) {
+      clAuth = pw; clMyLop = r.lop||'';
+      document.getElementById('clLoginGate').style.display='none';
+      document.getElementById('clContent2').style.display='block';
+      renderChatLuong();
+    } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai mật khẩu'; }
+  } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
 }
 
 // ===== NHẬP ĐIỂM — TT27 Spreadsheet =====
@@ -1695,29 +1878,80 @@ async function diemSaveNx(maHS) {
 async function viewHocBa(maHS) {
   const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===String(maHS));
   if (!hs) return;
+  const khoi = (hs.Ma_lop||'1')[0];
+  const monList = typeof getMonByKhoi==='function' ? getMonByKhoi(khoi) : MON_K12;
   let diemCN = [];
   try { const r = await api({action:'getDiem',maHS,ky:'CN'}); if(r.success) diemCN=r.data||[]; } catch(e){}
-  let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">';
-  html += '<div style="background:#fff;border-radius:20px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:30px">';
-  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h2 style="color:var(--p);font-size:20px">📋 Học bạ — '+hs.Ho_ten+'</h2><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--tm)">✕</button></div>';
-  html += '<div style="background:var(--bg);border-radius:14px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px;color:var(--tm)">';
-  html += '<div><strong>Họ tên:</strong> '+hs.Ho_ten+'</div><div><strong>Mã HS:</strong> '+hs.Ma_HS+'</div>';
-  html += '<div><strong>Ngày sinh:</strong> '+hs.Ngay_sinh+'</div><div><strong>Giới tính:</strong> '+hs.Gioi_tinh+'</div>';
-  html += '<div><strong>Lớp:</strong> '+hs.Ma_lop+'</div><div><strong>Dân tộc:</strong> '+(hs.Dan_toc||'')+'</div>';
-  html += '<div><strong>Cha:</strong> '+(hs.Ho_ten_cha||'')+'</div><div><strong>Mẹ:</strong> '+(hs.Ho_ten_me||'')+'</div>';
-  html += '</div>';
-  if (diemCN.length) {
-    html += '<h4 style="margin-bottom:10px">Kết quả đánh giá Cuối năm</h4>';
-    html += '<table class="cl-table"><thead><tr><th>Môn/Năng lực</th><th>Mức ĐG</th><th>Nhận xét</th></tr></thead><tbody>';
-    diemCN.forEach(d => {
-      const c = d.Muc_DG==='HTT'||d.Muc_DG==='T'?'#10B981':d.Muc_DG==='HT'||d.Muc_DG==='Đ'?'#3B82F6':'#EF4444';
-      html += '<tr><td style="text-align:left">'+d.Mon+'</td><td>'+(d.Muc_DG?'<span style="background:'+c+';color:#fff;padding:2px 10px;border-radius:8px;font-size:12px;font-weight:700">'+d.Muc_DG+'</span>':'')+'</td><td style="text-align:left;font-size:12px">'+(d.Nhan_xet||'')+'</td></tr>';
-    });
-    html += '</tbody></table>';
-  } else { html += '<p style="color:var(--tm)">Chưa có kết quả cuối năm.</p>'; }
-  html += '</div></div>';
+  const dMap = {}; diemCN.forEach(d => dMap[d.Mon] = d);
+  const nlpc = typeof NANG_LUC!=='undefined' ? NANG_LUC.concat(PHAM_CHAT) : [];
+  let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">';
+  html += '<div style="background:#fff;border-radius:20px;max-width:780px;width:100%;max-height:92vh;overflow-y:auto;padding:0">';
+  html += '<div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);padding:20px 28px;border-radius:20px 20px 0 0;color:#fff;position:relative"><h3 style="font-size:18px;margin-bottom:4px">📋 Học bạ: '+hs.Ho_ten+'</h3><div style="font-size:13px;opacity:.8">Lớp '+hs.Ma_lop+' · '+(hs.Ngay_sinh||'')+' · '+(hs.Gioi_tinh||'')+'</div><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer">✕</button></div>';
+  html += '<div style="padding:24px 28px">';
+  html += '<h4 style="color:#1e293b;margin-bottom:12px"><i class="fas fa-user" style="color:#7c3aed"></i> Thông tin học sinh</h4>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:20px"><div style="background:#f8fafc;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#94a3b8">Chiều cao (cm)</div><div style="font-size:18px;font-weight:700">...</div></div><div style="background:#f8fafc;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#94a3b8">Cân nặng (kg)</div><div style="font-size:18px;font-weight:700">...</div></div><div style="background:#f0fdf4;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#16a34a">Nghỉ có phép</div><div style="font-size:18px;font-weight:700;color:#16a34a">0</div></div><div style="background:#fef2f2;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#dc2626">Nghỉ không phép</div><div style="font-size:18px;font-weight:700;color:#dc2626">0</div></div></div>';
+  html += '<h4 style="color:#1e293b;margin-bottom:10px">📘 1. Các môn học và hoạt động giáo dục</h4>';
+  html += '<table style="width:100%;border-collapse:collapse;margin-bottom:18px"><thead><tr style="background:#7c3aed;color:#fff"><th style="text-align:left;padding:10px;border-radius:8px 0 0 0">Môn học</th><th style="padding:10px;width:70px">Mức đạt</th><th style="padding:10px;width:70px">Điểm KTĐK</th><th style="text-align:left;padding:10px;border-radius:0 8px 0 0">Nhận xét</th></tr></thead><tbody>';
+  monList.forEach(function(m) {
+    var d = dMap[m]||{}, v = d.Muc_DG||'', dk = d.Diem_KTDK||'', nx = d.Nhan_xet||'';
+    var cls = v==='T'?'background:#dcfce7;color:#16a34a':v==='H'?'background:#fef3c7;color:#d97706':'background:#fecaca;color:#dc2626';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:10px;font-weight:600;font-size:13px">'+m+'</td><td style="padding:10px;text-align:center">'+(v?'<span style="'+cls+';padding:3px 10px;border-radius:6px;font-size:12px;font-weight:800">'+v+'</span>':'—')+'</td><td style="padding:10px;text-align:center;color:#7c3aed;font-weight:700">'+(dk||'—')+'</td><td style="padding:10px"><input class="hb-nx" data-mon="'+m+'" value="'+(nx||'').replace(/"/g,'&quot;')+'" placeholder="Nhận xét..." style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
+  });
+  html += '</tbody></table>';
+  html += '<h4 style="color:#1e293b;margin-bottom:10px">💜 2. Năng lực & Phẩm chất</h4><table style="width:100%;border-collapse:collapse;margin-bottom:18px"><tbody>';
+  nlpc.forEach(function(n) {
+    var d = dMap[n]||{}, v = d.Muc_DG||'', nx = d.Nhan_xet||'';
+    var cls = v==='T'?'background:#dcfce7;color:#16a34a':v==='Đ'?'background:#dbeafe;color:#2563eb':'background:#fecaca;color:#dc2626';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:10px;font-weight:600;font-size:13px">'+n+'</td><td style="padding:10px;text-align:center;width:70px">'+(v?'<span style="'+cls+';padding:3px 10px;border-radius:6px;font-size:12px;font-weight:800">'+v+'</span>':'—')+'</td><td style="padding:10px"><input class="hb-nx" data-mon="'+n+'" value="'+(nx||'').replace(/"/g,'&quot;')+'" placeholder="Nhận xét..." style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
+  });
+  html += '</tbody></table>';
+  html += '<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid #e2e8f0;padding-top:16px">';
+  html += '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:10px 20px;border:1px solid #e2e8f0;background:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;color:#64748b">Đóng</button>';
+  html += '<button onclick="hbExportWord(\''+maHS+'\')" style="padding:10px 20px;border:2px solid #dc2626;background:#fff;color:#dc2626;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-file-word"></i> Xuất Word</button>';
+  html += '<button onclick="hbAINx(\''+maHS+'\')" style="padding:10px 20px;border:none;background:#7c3aed;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-robot"></i> AI Nhận xét</button>';
+  html += '<button onclick="hbSave(\''+maHS+'\')" style="padding:10px 20px;border:none;background:#2563eb;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-save"></i> Lưu</button>';
+  html += '</div></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
 }
+async function hbAINx(maHS) {
+  const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
+  if (!hs) return;
+  const grades = [];
+  document.querySelectorAll('div[style*="fixed"] span[style*="border-radius:6px"]').forEach(function(s) {
+    var v = s.textContent.trim();
+    if (v && v!=='—') { var td = s.closest('tr').querySelector('td'); if(td) grades.push(td.textContent+': '+v); }
+  });
+  if (!grades.length) { alert('Chưa có mức đánh giá'); return; }
+  var inputs = document.querySelectorAll('.hb-nx');
+  inputs.forEach(function(inp) { inp.value='⏳ ...'; });
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:'GV tiểu học VN. HS '+hs.Ho_ten+' lớp '+hs.Ma_lop+': '+grades.join(', ')+'. Viết nhận xét TỪNG môn/NL/PC (1 câu 8-15 từ, tích cực). JSON: {"Toán":"...",...}. Chỉ JSON.'}]})});
+    var j = await r.json();
+    var nx = JSON.parse(((j.content&&j.content[0]&&j.content[0].text)||'{}').replace(/\`\`\`json|\`\`\`/g,'').trim());
+    inputs.forEach(function(inp) { var m=inp.getAttribute('data-mon'); inp.value=nx[m]||''; });
+  } catch(e) { inputs.forEach(function(inp){inp.value='';}); alert('Lỗi AI: '+e.message); }
+}
+async function hbSave(maHS) {
+  const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
+  if (!hs) return;
+  const pw = diemPw || scnAuth || clAuth || admAuth;
+  if (!pw) { alert('Cần đăng nhập trước'); return; }
+  const items = [];
+  document.querySelectorAll('.hb-nx').forEach(function(inp) {
+    var mon=inp.getAttribute('data-mon'), nx=inp.value.trim();
+    var badge = inp.closest('tr').querySelector('span[style*="border-radius"]');
+    var mucDG = badge ? badge.textContent.trim() : '';
+    if (nx||(mucDG&&mucDG!=='—')) items.push({maHS:maHS,hoTen:hs.Ho_ten,lop:hs.Ma_lop,ky:'CN',mon:mon,mucDG:mucDG==='—'?'':mucDG,nhanXet:nx});
+  });
+  if (!items.length) { alert('Không có dữ liệu'); return; }
+  try {
+    var q='action=nhapDiemBatch&data='+encodeURIComponent(JSON.stringify({password:pw,nguoiNhap:'GVCN',items:items}));
+    var r = await fetch(GAS_URL+'?'+q);
+    var j = await r.json();
+    alert(j.success ? '✓ '+j.msg : (j.error||'Lỗi'));
+  } catch(e) { alert('Lỗi: '+e.message); }
+}
+function hbExportWord(maHS) { alert('Tính năng Xuất Word sẽ được bổ sung trong phiên bản tiếp theo.'); }
 
 // ===== UPLOAD / DOWNLOAD =====
 function downloadTemplate(type) {
