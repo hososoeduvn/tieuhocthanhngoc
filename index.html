@@ -617,6 +617,9 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
     <div class="diem-layout">
       <!-- Sidebar -->
       <div class="diem-sidebar">
+        <div style="padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.1)">
+          <button onclick="go('home')" style="background:rgba(255,255,255,.1);border:none;color:#93c5fd;cursor:pointer;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;width:100%;text-align:left;font-family:inherit"><i class="fas fa-arrow-left"></i> ← Trang chủ</button>
+        </div>
         <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.1)">
           <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px" id="diemSchoolName">TH Thanh Ngọc</div>
           <div style="font-size:11px;color:rgba(255,255,255,.6)">Nhập kết quả đánh giá</div>
@@ -1295,7 +1298,7 @@ function ssGo(i){ssIdx=i;const t=document.getElementById('ssTrack');if(t)t.style
 function ssMove(dir){ssGo((ssIdx+dir+ssCount)%ssCount);}
 
 // ===== NAVIGATION =====
-function go(p){document.querySelectorAll('.pg').forEach(x=>x.classList.remove('active'));document.getElementById('pg-'+p).classList.add('active');document.querySelectorAll('.mn-l').forEach(n=>n.classList.remove('active'));const a=document.querySelector('.mn-l[data-page="'+p+'"]');if(a)a.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});document.getElementById('menu').classList.remove('show');const hd=document.getElementById('hd');if(p==='diem'){hd.style.display='none'}else{hd.style.display=''}}
+function go(p){document.querySelectorAll('.pg').forEach(x=>x.classList.remove('active'));document.getElementById('pg-'+p).classList.add('active');document.querySelectorAll('.mn-l').forEach(n=>n.classList.remove('active'));const a=document.querySelector('.mn-l[data-page="'+p+'"]');if(a)a.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});document.getElementById('menu').classList.remove('show');const hd=document.getElementById('hd');if(p==='diem'){hd.style.display='none';if(admAuth&&!diemPw){document.getElementById('diemPw').value=admAuth;var _dn=document.getElementById('diemName');if(_dn)_dn.value='Admin';diemAuth()}}else{hd.style.display=''}if(p==='scn'&&admAuth&&!scnAuth){document.getElementById('scnPw').value=admAuth;document.getElementById('scnName').value='Admin';scnLogin()}}
 
 // ===== HỒ SƠ ACCORDION =====
 function togAcc(el){const b=el.nextElementSibling;const o=el.classList.contains('open');document.querySelectorAll('.acc-h').forEach(h=>{h.classList.remove('open');h.nextElementSibling.classList.remove('open')});if(!o){el.classList.add('open');b.classList.add('open')}}
