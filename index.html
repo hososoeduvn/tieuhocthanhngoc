@@ -879,7 +879,6 @@ function renderAll() {
   renderNangLuc();
   renderCacLop();
   renderSoChuNhiem();
-  renderChatLuong();
   renderHocBa();
   renderHinhAnh();
   animStats();
@@ -1148,6 +1147,8 @@ function scnShowKhoi(khoi) {
 
 // ===== CHẤT LƯỢNG (từ API getDiem) =====
 function renderChatLuong() {
+  const tabsEl = document.getElementById('clTabs');
+  if (!tabsEl) return; // Elements not in DOM
   // Tabs kỳ
   const kys = ['GK1','CK1','GK2','CN'];
   document.getElementById('clTabs').innerHTML = kys.map(k => '<button class="cl-tab'+(k===clCurKy?' active':'')+'" onclick="clChangeKy(this,&#39;'+k+'&#39;)">'+k+'</button>').join('') + '<button class="cl-tab" onclick="go(&#39;diem&#39;)" style="margin-left:auto;background:var(--gn);color:#fff;border-color:var(--gn)"><i class="fas fa-edit"></i> Nhập điểm</button>';
@@ -1160,15 +1161,15 @@ function clChangeKy(btn, ky) {
   clLoadData();
 }
 async function clLoadData() {
-  document.getElementById('clContent').innerHTML = '<p style="text-align:center;padding:40px;color:var(--tm)"><i class="fas fa-spinner fa-spin"></i> Đang tải...</p>';
+  var _clC=document.getElementById('clContent');if(_clC) _clC.innerHTML = '<p style="text-align:center;padding:40px;color:var(--tm)"><i class="fas fa-spinner fa-spin"></i> Đang tải...</p>';
   try {
     const res = await api({action:'getDiem',ky:clCurKy});
     if (res && res.success) { clRenderData(res.data||[]); }
-    else { document.getElementById('clContent').innerHTML = '<p style="text-align:center;padding:40px;color:var(--tm)">Chưa có dữ liệu kỳ '+clCurKy+'</p>'; }
-  } catch(e) { document.getElementById('clContent').innerHTML = '<p style="text-align:center;padding:40px;color:#dc2626">Lỗi: '+e.message+'</p>'; }
+    else { var _clC=document.getElementById('clContent');if(_clC) _clC.innerHTML = '<p style="text-align:center;padding:40px;color:var(--tm)">Chưa có dữ liệu kỳ '+clCurKy+'</p>'; }
+  } catch(e) { var _clC=document.getElementById('clContent');if(_clC) _clC.innerHTML = '<p style="text-align:center;padding:40px;color:#dc2626">Lỗi: '+e.message+'</p>'; }
 }
 function clRenderData(data) {
-  if (!data.length) { document.getElementById('clSummary').innerHTML=''; document.getElementById('clContent').innerHTML='<p style="text-align:center;color:var(--tm);padding:40px">Chưa có dữ liệu kỳ '+clCurKy+'. <a href="#" onclick="go(&#39;diem&#39;);return false" style="color:var(--p);font-weight:700">Nhập điểm →</a></p>'; return; }
+  if (!data.length) { var _clS=document.getElementById('clSummary');if(_clS) _clS.innerHTML=''; document.getElementById('clContent').innerHTML='<p style="text-align:center;color:var(--tm);padding:40px">Chưa có dữ liệu kỳ '+clCurKy+'. <a href="#" onclick="go(&#39;diem&#39;);return false" style="color:var(--p);font-weight:700">Nhập điểm →</a></p>'; return; }
   // Group by lớp → môn
   const byLop = {};
   data.forEach(d => {
@@ -1185,7 +1186,7 @@ function clRenderData(data) {
   // Summary
   let totalHTT=0,totalHT=0,totalCHT=0;
   Object.values(byLop).forEach(lop => Object.values(lop).forEach(m => { totalHTT+=m.htt; totalHT+=m.ht; totalCHT+=m.cht; }));
-  document.getElementById('clSummary').innerHTML = '<div class="cl-card"><div class="cl-num">'+data.length+'</div><div class="cl-label">Bản ghi</div></div><div class="cl-card"><div class="cl-num" style="color:#10B981">'+totalHTT+'</div><div class="cl-label">HTT</div></div><div class="cl-card"><div class="cl-num" style="color:#3B82F6">'+totalHT+'</div><div class="cl-label">HT</div></div><div class="cl-card"><div class="cl-num" style="color:#EF4444">'+totalCHT+'</div><div class="cl-label">CHT</div></div>';
+  var _clS2=document.getElementById('clSummary');if(_clS2) _clS2.innerHTML = '<div class="cl-card"><div class="cl-num">'+data.length+'</div><div class="cl-label">Bản ghi</div></div><div class="cl-card"><div class="cl-num" style="color:#10B981">'+totalHTT+'</div><div class="cl-label">HTT</div></div><div class="cl-card"><div class="cl-num" style="color:#3B82F6">'+totalHT+'</div><div class="cl-label">HT</div></div><div class="cl-card"><div class="cl-num" style="color:#EF4444">'+totalCHT+'</div><div class="cl-label">CHT</div></div>';
   // Table
   let html = '<table class="cl-table"><thead><tr><th>Lớp</th><th>Môn</th><th>SL</th><th>HTT</th><th>HT</th><th>CHT</th><th>Phân bố</th></tr></thead><tbody>';
   Object.keys(byLop).sort().forEach(lop => {
@@ -1197,7 +1198,7 @@ function clRenderData(data) {
     });
   });
   html += '</tbody></table>';
-  document.getElementById('clContent').innerHTML = html;
+  var _clC2=document.getElementById('clContent');if(_clC2) _clC2.innerHTML = html;
 }
 
 // ===== HỌC BẠ SỐ (từ hocSinh) =====
@@ -1508,8 +1509,10 @@ async function clLogin() {
     const r = await api({action:'loginGV',password:pw});
     if (r.success) {
       clAuth = pw; clMyLop = r.lop||'';
-      document.getElementById('clLoginGate').style.display='none';
-      document.getElementById('clContent2').style.display='block';
+      const clGate = document.getElementById('clLoginGate');
+      const clCont = document.getElementById('clContent2');
+      if (clGate) clGate.style.display='none';
+      if (clCont) clCont.style.display='block';
       renderChatLuong();
     } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai mật khẩu'; }
   } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
