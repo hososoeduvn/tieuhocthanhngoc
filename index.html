@@ -420,6 +420,38 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
 .scn-qn i{font-size:22px;margin-bottom:8px;color:var(--p)}
 @media(max-width:768px){.scn-detail-sidebar{width:100%;position:relative;top:auto;bottom:auto;padding-top:10px}.scn-detail-main{margin-left:0;padding:20px 16px}.scn-detail-layout{flex-direction:column}.scn-info-cards{grid-template-columns:1fr}.scn-quick-nav{grid-template-columns:1fr 1fr}}
 
+
+/* === Mobile Card View === */
+.diem-cards{display:none;padding:16px}
+.diem-card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden}
+.diem-card-header{background:linear-gradient(135deg,#1e3a5f,#2d5a8e);padding:14px 18px;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.diem-card-header h4{font-size:15px;margin:0}
+.diem-card-header span{font-size:12px;opacity:.7}
+.diem-card-body{padding:16px}
+.diem-card-section{margin-bottom:14px}
+.diem-card-section h5{font-size:12px;text-transform:uppercase;color:#94a3b8;font-weight:800;letter-spacing:1px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #f1f5f9}
+.diem-card-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f8fafc}
+.diem-card-row .dcr-name{font-size:13px;font-weight:600;color:#1e293b;flex:1}
+.diem-card-row .dcr-badge{min-width:36px;text-align:center}
+.diem-card-row .dcr-score{width:44px}
+.diem-card-row .dcr-score input{width:40px;padding:4px;text-align:center;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-weight:700;color:#7c3aed}
+.diem-card-nav{display:flex;gap:8px;justify-content:center;padding:16px;position:sticky;bottom:0;background:#f1f5f9;border-top:1px solid #e2e8f0}
+.diem-card-nav button{padding:10px 20px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:13px}
+.dcn-prev{background:#e2e8f0;color:#475569}
+.dcn-save{background:#2563eb;color:#fff}
+.dcn-next{background:#1e3a5f;color:#fff}
+@media(max-width:768px){
+  .diem-table-wrap{display:none !important}
+  .diem-cards{display:block !important}
+  .diem-toolbar{flex-direction:column;gap:8px;padding:10px 12px}
+  .diem-toolbar .diem-sel,.diem-toolbar .diem-search{width:100%}
+  .diem-info{flex-direction:column;gap:4px;font-size:12px;padding:8px 12px}
+  .diem-sidebar{width:100%;position:relative;height:auto}
+  .diem-content{margin-left:0}
+  .diem-layout{flex-direction:column}
+  .dbtn{font-size:11px;padding:6px 10px}
+}
+
 .th-btn{display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--bg2);background:#fff;border-radius:14px;cursor:pointer;text-align:left;transition:var(--tr);font-family:inherit}
 .th-btn:hover{border-color:var(--p);transform:translateY(-2px);box-shadow:var(--sh)}
 .th-btn.active{border-color:var(--p);background:rgba(var(--p-rgb),.06);box-shadow:0 0 0 3px rgba(var(--p-rgb),.12)}
@@ -655,6 +687,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
         <div class="diem-table-wrap" id="diemTableWrap">
           <div style="text-align:center;padding:80px 20px;color:#94a3b8"><i class="fas fa-hand-pointer" style="font-size:48px;margin-bottom:16px;display:block"></i><p style="font-size:16px;font-weight:600">Chọn Khối → Lớp để bắt đầu nhập kết quả</p></div>
         </div>
+      <div class="diem-cards" id="diemCards"></div>
       </div>
     </div>
   </div>
@@ -1525,6 +1558,75 @@ async function clLogin() {
   } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
 }
 
+
+// ===== NGÂN HÀNG NHẬN XÉT MẪU =====
+const NX_BANK = {
+  'Toán': {
+    'T': ['Em nắm vững kiến thức Toán, tính toán nhanh chính xác.','Em có khả năng tư duy logic tốt, giải toán sáng tạo.','Em hoàn thành xuất sắc các bài tập Toán.'],
+    'H': ['Em hoàn thành kiến thức môn Toán, cần rèn thêm kỹ năng tính toán.','Em nắm được kiến thức cơ bản, cần cố gắng thêm ở dạng bài nâng cao.'],
+    'C': ['Em cần cố gắng nhiều hơn ở môn Toán, rèn thêm kỹ năng tính toán.']
+  },
+  'Tiếng Việt': {
+    'T': ['Em đọc lưu loát, viết đúng chính tả, diễn đạt mạch lạc.','Em có vốn từ phong phú, viết văn có cảm xúc.','Em hoàn thành xuất sắc các bài tập Tiếng Việt.'],
+    'H': ['Em đọc được bài, cần rèn thêm kỹ năng viết và trình bày.','Em hoàn thành kiến thức cơ bản, cần cải thiện chính tả.'],
+    'C': ['Em cần rèn thêm kỹ năng đọc, viết và trình bày.']
+  },
+  'Đạo đức': {
+    'T': ['Em ngoan ngoãn, biết nghe lời thầy cô và cha mẹ.','Em có ý thức tốt trong học tập và rèn luyện đạo đức.'],
+    'H': ['Em ngoan, biết vâng lời, cần phát huy hơn nữa.'],
+    'C': ['Em cần cố gắng rèn luyện đạo đức, nghe lời thầy cô hơn.']
+  },
+  '_default': {
+    'T': ['Em hoàn thành tốt nội dung học tập, tích cực tham gia các hoạt động.','Em có năng khiếu và đam mê với môn học.'],
+    'H': ['Em hoàn thành nội dung học tập, cần tích cực tham gia hơn.','Em nắm được kiến thức cơ bản của môn học.'],
+    'C': ['Em cần cố gắng nhiều hơn, tích cực tham gia hoạt động học tập.']
+  },
+  '_nl': {
+    'T': ['Em tự giác, chủ động trong học tập và sinh hoạt.','Em biết hợp tác, chia sẻ với bạn bè trong nhóm.','Em biết vận dụng kiến thức giải quyết vấn đề sáng tạo.'],
+    'Đ': ['Em cơ bản đạt yêu cầu, cần phát huy tính tự giác hơn.','Em biết phối hợp với bạn, cần chủ động hơn.'],
+    'C': ['Em cần rèn luyện thêm, tích cực tham gia hoạt động nhóm.']
+  },
+  '_pc': {
+    'T': ['Em có phẩm chất tốt, là tấm gương cho các bạn.','Em luôn trung thực, có trách nhiệm với công việc.'],
+    'Đ': ['Em cơ bản đạt yêu cầu về phẩm chất, cần phát huy hơn.'],
+    'C': ['Em cần rèn luyện thêm phẩm chất đạo đức.']
+  }
+};
+function getNxSuggestions(mon, muc) {
+  const bank = NX_BANK[mon] || (NANG_LUC.includes(mon) ? NX_BANK['_nl'] : PHAM_CHAT.includes(mon) ? NX_BANK['_pc'] : NX_BANK['_default']);
+  return (bank && bank[muc]) || [];
+}
+function showNxBank(inputId, mon, muc) {
+  const suggestions = getNxSuggestions(mon, muc);
+  if (!suggestions.length) { alert('Không có mẫu nhận xét cho mức này'); return; }
+  const inp = document.getElementById(inputId) || document.querySelector('.nx-input[data-mon="'+mon+'"]') || document.querySelector('.hb-nx[data-mon="'+mon+'"]');
+  if (!inp) return;
+  let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">';
+  html += '<div style="background:#fff;border-radius:16px;max-width:500px;width:100%;padding:24px;max-height:80vh;overflow-y:auto">';
+  html += '<h4 style="margin-bottom:16px;color:#1e293b">📝 Mẫu nhận xét: '+mon+' ('+muc+')</h4>';
+  suggestions.forEach(function(s, i) {
+    html += '<div onclick="document.querySelector(\'[data-nxbank]\').setAttribute(\'data-chosen\',\''+i+'\');this.closest(\'div[style*=fixed]\').remove()" style="padding:12px 16px;margin-bottom:8px;border:2px solid #e2e8f0;border-radius:10px;cursor:pointer;font-size:13px;transition:all .2s" onmouseover="this.style.borderColor=\'#3b82f6\';this.style.background=\'#eff6ff\'" onmouseout="this.style.borderColor=\'#e2e8f0\';this.style.background=\'#fff\'">'+s+'</div>';
+  });
+  html += '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="width:100%;padding:10px;border:none;background:#f1f5f9;border-radius:10px;cursor:pointer;font-weight:600;font-family:inherit;margin-top:8px">Đóng</button>';
+  html += '</div></div>';
+  // Mark target input
+  inp.setAttribute('data-nxbank','1');
+  document.body.insertAdjacentHTML('beforeend', html);
+  // Listen for choice
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      if (m.attributeName === 'data-chosen') {
+        const idx = parseInt(inp.getAttribute('data-chosen'));
+        inp.value = suggestions[idx] || '';
+        inp.removeAttribute('data-nxbank');
+        inp.removeAttribute('data-chosen');
+        observer.disconnect();
+      }
+    });
+  });
+  observer.observe(inp, {attributes:true});
+}
+
 // ===== NHẬP ĐIỂM — TT27 Spreadsheet =====
 let diemPw = null;
 let diemRole = '';
@@ -1682,7 +1784,7 @@ async function diemLoadLop() {
       }
       if (showKTDK && MON_KTDK.includes(mon)) {
         const dk = g.diemKTDK||'';
-        html += '<td><input class="dktdk-input" data-mon="'+mon+'" value="'+dk+'" style="width:36px;text-align:center;border:1px solid #e2e8f0;border-radius:4px;padding:2px;font-size:12px;font-weight:700" type="number" min="0" max="9" step="1"'+(ok?'':' disabled style="opacity:.4"')+'></td>';
+        html += '<td><input class="dktdk-input" data-mon="'+mon+'" value="'+dk+'" style="width:36px;text-align:center;border:1px solid #e2e8f0;border-radius:4px;padding:2px;font-size:12px;font-weight:700" type="number" min="1" max="10" step="1"'+(ok?'':' disabled style="opacity:.4"')+'></td>';
       }
     });
     // Separator + NL/PC (GVCN hoặc admin mới được sửa NL/PC)
@@ -1711,6 +1813,99 @@ async function diemLoadLop() {
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
+  // Build mobile card view
+  diemBuildCards(students, monList, showKTDK);
+}
+let diemCardIdx = 0;
+function diemBuildCards(students, monList, showKTDK) {
+  const container = document.getElementById('diemCards');
+  if (!container) return;
+  diemCardIdx = 0;
+  // Store data for card navigation
+  window._diemCardStudents = students;
+  window._diemCardMonList = monList;
+  window._diemCardShowKTDK = showKTDK;
+  diemRenderCard(0);
+}
+function diemRenderCard(idx) {
+  const students = window._diemCardStudents || [];
+  const monList = window._diemCardMonList || [];
+  const showKTDK = window._diemCardShowKTDK || false;
+  const container = document.getElementById('diemCards');
+  if (!container || !students.length) return;
+  if (idx < 0) idx = 0;
+  if (idx >= students.length) idx = students.length - 1;
+  diemCardIdx = idx;
+  const hs = students[idx];
+  const maHS = String(hs.Ma_HS);
+  const grades = diemData[maHS] || {};
+  const canEdit = function(mon) { if (diemMonDay==='ALL') return true; return diemMonDay.split(',').map(function(s){return s.trim()}).includes(mon); };
+  const canNLPC = diemMonDay === 'ALL';
+  let html = '<div class="diem-card">';
+  html += '<div class="diem-card-header"><h4>'+hs.Ho_ten+'</h4><span>'+(idx+1)+'/'+students.length+' · Lớp '+diemLopCur+'</span></div>';
+  html += '<div class="diem-card-body">';
+  // Môn học
+  html += '<div class="diem-card-section"><h5>📘 Môn học</h5>';
+  monList.forEach(function(m) {
+    var g = grades[m]||{}, v = g.mucDG||'', ok = canEdit(m);
+    html += '<div class="diem-card-row"><span class="dcr-name">'+m+'</span>';
+    if (ok) {
+      html += '<span class="dcr-badge"><span class="dg-badge '+(v?'dg-'+v:'dg-empty')+'" data-mon="'+m+'" data-type="mh" onclick="diemToggle(this)">'+(v||'—')+'</span></span>';
+    } else {
+      html += '<span class="dcr-badge"><span class="dg-badge '+(v?'dg-'+v:'dg-empty')+'" style="opacity:.4">'+(v||'—')+'</span></span>';
+    }
+    if (showKTDK && ['Toán','Tiếng Việt'].includes(m)) {
+      var dk = g.diemKTDK||'';
+      html += '<span class="dcr-score"><input type="number" min="1" max="10" step="1" value="'+dk+'" class="dktdk-input" data-mon="'+m+'"'+(ok?'':' disabled')+'></span>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  // NL
+  html += '<div class="diem-card-section"><h5>💚 Năng lực</h5>';
+  NANG_LUC.forEach(function(n) {
+    var g = grades[n]||{}, v = g.mucDG||'';
+    html += '<div class="diem-card-row"><span class="dcr-name">'+n+'</span>';
+    if (canNLPC) {
+      html += '<span class="dcr-badge"><span class="dg-badge '+(v?'dg-'+v:'dg-empty')+'" data-mon="'+n+'" data-type="nl" onclick="diemToggle(this)">'+(v||'—')+'</span></span>';
+    } else {
+      html += '<span class="dcr-badge"><span class="dg-badge '+(v?'dg-'+v:'dg-empty')+'" style="opacity:.4">'+(v||'—')+'</span></span>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  // PC
+  html += '<div class="diem-card-section"><h5>💜 Phẩm chất</h5>';
+  PHAM_CHAT.forEach(function(p) {
+    var g = grades[p]||{}, v = g.mucDG||'';
+    html += '<div class="diem-card-row"><span class="dcr-name">'+p+'</span>';
+    if (canNLPC) {
+      html += '<span class="dcr-badge"><span class="dg-badge '+(v?'dg-'+v:'dg-empty')+'" data-mon="'+p+'" data-type="nl" onclick="diemToggle(this)">'+(v||'—')+'</span></span>';
+    } else {
+      html += '<span class="dcr-badge"><span class="dg-badge '+(v?'dg-'+v:'dg-empty')+'" style="opacity:.4">'+(v||'—')+'</span></span>';
+    }
+    html += '</div>';
+  });
+  html += '</div></div></div>';
+  // Navigation
+  html += '<div class="diem-card-nav">';
+  html += '<button class="dcn-prev" onclick="diemRenderCard('+(idx-1)+')"'+(idx<=0?' disabled style="opacity:.4"':'')+'><i class="fas fa-chevron-left"></i> Trước</button>';
+  html += '<button class="dcn-save" onclick="diemSaveLop()"><i class="fas fa-save"></i> Lưu</button>';
+  html += '<button class="dcn-next" onclick="diemRenderCard('+(idx+1)+')"'+(idx>=students.length-1?' disabled style="opacity:.4"':'')+'><i class="fas fa-chevron-right"></i> Tiếp</button>';
+  html += '</div>';
+  container.innerHTML = html;
+  // Sync card changes back to table (hidden on mobile but used for save)
+  container.querySelectorAll('.dg-badge[onclick]').forEach(function(badge) {
+    badge.addEventListener('click', function() {
+      var mon = this.getAttribute('data-mon');
+      var val = this.textContent.trim();
+      var tr = document.querySelector('.dtable tbody tr[data-ma="'+maHS+'"]');
+      if (tr) {
+        var tBadge = tr.querySelector('.dg-badge[data-mon="'+mon+'"]');
+        if (tBadge) { tBadge.textContent = val; tBadge.className = this.className; }
+      }
+    });
+  });
 }
 function diemToggle(el) {
   const type = el.getAttribute('data-type');
@@ -1919,7 +2114,7 @@ function diemEditRow(maHS) {
     const v = grades[mon]||'';
     const dk = ktdkVals[mon]||'';
     html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px;font-weight:600">'+mon+'</td><td style="text-align:center;padding:6px">'+(v?'<span class="dg-badge dg-'+v+'">'+v+'</span>':'—')+'</td>';
-    if (showKTDK) html += '<td style="text-align:center;padding:6px">'+(MON_KTDK.includes(mon)?'<input class="nx-ktdk" data-mon="'+mon+'" value="'+dk+'" style="width:40px;text-align:center;border:1px solid #e2e8f0;border-radius:4px;padding:2px;font-weight:700" type="number" min="0" max="9" step="1">':'—')+'</td>';
+    if (showKTDK) html += '<td style="text-align:center;padding:6px">'+(MON_KTDK.includes(mon)?'<input class="nx-ktdk" data-mon="'+mon+'" value="'+dk+'" style="width:40px;text-align:center;border:1px solid #e2e8f0;border-radius:4px;padding:2px;font-weight:700" type="number" min="1" max="10" step="1">':'—')+'</td>';
     html += '<td style="padding:6px"><input class="nx-input" data-mon="'+mon+'" placeholder="Nhận xét..." style="width:100%;padding:4px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
   });
   html += '</tbody></table>';
