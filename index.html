@@ -546,6 +546,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
         <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.1)">
           <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px" id="diemSchoolName">TH Thanh Ngọc</div>
           <div style="font-size:11px;color:rgba(255,255,255,.6)">Nhập kết quả đánh giá</div>
+          <div id="diemRoleInfo" style="font-size:11px;color:#60a5fa;margin-top:4px"></div>
         </div>
         <div style="padding:14px">
           <div style="font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:700;margin-bottom:8px;letter-spacing:1px">Kỳ đánh giá</div>
@@ -1343,20 +1344,37 @@ async function admChangePw(){
   }catch(e){msg.className='adm-msg err';msg.textContent='Lỗi: '+e.message;}
 }
 
-// ===== NHẬP ĐIỂM — Spreadsheet style =====
+// ===== NHẬP ĐIỂM — TT27 Spreadsheet =====
 let diemPw = null;
+let diemRole = '';  // 'admin' or 'gvcn'
+let diemMyLop = ''; // lớp được phân công (gvcn) or 'all' (admin)
 let diemKy = 'GK1';
 let diemKhoi = '';
 let diemLopCur = '';
-let diemData = {}; // maHS → {mon: mucDG}
-const MON_HOC = ['Toán','T.Việt','Đ.đức','TNXH','NN','TH','ÂN','MT','HĐTN','GDTC','Tự','Giao','Giải'];
-const MON_HOC_FULL = ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Ngoại ngữ','Tin học','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm','Giáo dục thể chất','Tự chủ và tự học','Giao tiếp và hợp tác','Giải quyết vấn đề'];
-const NLPC = ['Ngôn','Tính','Khoa','Thẩm','Thể','Yêu','Nhân','Chăm','Trun','Trác'];
-const NLPC_FULL = ['Năng lực ngôn ngữ','Năng lực tính toán','Năng lực khoa học','Năng lực thẩm mĩ','Năng lực thể chất','Phẩm chất yêu nước','Phẩm chất nhân ái','Phẩm chất chăm chỉ','Phẩm chất trung thực','Phẩm chất trách nhiệm'];
-const ALL_MON = MON_HOC_FULL.concat(NLPC_FULL);
-const ALL_MON_SHORT = MON_HOC.concat(NLPC);
-const MH_LEVELS = ['HTT','HT','CHT'];
-const NL_LEVELS = ['T','Đ','CCG'];
+let diemData = {};
+
+// Môn học theo khối (TT27/2020)
+const MON_KHOI = {
+  '1': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
+  '2': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
+  '3': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Ngoại ngữ','Tin học','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
+  '4': ['Toán','Tiếng Việt','Đạo đức','Khoa học','Lịch sử và Địa lí','Ngoại ngữ','Tin học','Công nghệ','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
+  '5': ['Toán','Tiếng Việt','Đạo đức','Khoa học','Lịch sử và Địa lí','Ngoại ngữ','Tin học','Công nghệ','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm']
+};
+const MON_SHORT = {'Toán':'Toán','Tiếng Việt':'T.Việt','Đạo đức':'Đ.đức','Tự nhiên và Xã hội':'TNXH','Khoa học':'Khoa','Lịch sử và Địa lí':'LS&ĐL','Ngoại ngữ':'NN','Tin học':'TH','Công nghệ':'CN','Giáo dục thể chất':'GDTC','Âm nhạc':'ÂN','Mĩ thuật':'MT','Hoạt động trải nghiệm':'HĐTN'};
+// Năng lực + Phẩm chất (3 NL + 5 PC)
+const NANG_LUC = ['Tự chủ và tự học','Giao tiếp và hợp tác','Giải quyết vấn đề và sáng tạo'];
+const PHAM_CHAT = ['Yêu nước','Nhân ái','Chăm chỉ','Trung thực','Trách nhiệm'];
+const NL_SHORT = {'Tự chủ và tự học':'Tự chủ','Giao tiếp và hợp tác':'Giao tiếp','Giải quyết vấn đề và sáng tạo':'GQVĐ'};
+const PC_SHORT = {'Yêu nước':'Y.nước','Nhân ái':'N.ái','Chăm chỉ':'C.chỉ','Trung thực':'T.thực','Trách nhiệm':'T.nhiệm'};
+// Môn có bài KTĐK (điểm số) - chỉ CK1, CN
+const MON_KTDK = ['Toán','Tiếng Việt'];
+// Mức đánh giá
+const MUC_MON = ['T','H','C']; // Hoàn thành tốt / Hoàn thành / Chưa HT
+const MUC_NLPC = ['T','Đ','C']; // Tốt / Đạt / Cần cố gắng
+
+function getMonByKhoi(khoi) { return MON_KHOI[khoi] || MON_KHOI['1']; }
+function hasKTDK(ky) { return ky === 'CK1' || ky === 'CN'; }
 
 async function diemAuth() {
   const pw = document.getElementById('diemPw').value.trim();
@@ -1364,16 +1382,26 @@ async function diemAuth() {
   if (!pw) { msg.className='adm-msg err'; msg.textContent='Nhập mật khẩu'; return; }
   msg.textContent='Đang kiểm tra...';
   try {
-    const r = await api({action:'login',password:pw});
+    const r = await api({action:'loginGV',password:pw});
     if (r.success) {
-      diemPw = pw;
+      diemPw = pw; diemRole = r.role; diemMyLop = r.lop||'all';
       document.getElementById('diemLogin').style.display='none';
       document.getElementById('diemPanel').style.display='block';
       const t = D.thongTin||{};
       const el = document.getElementById('diemSchoolName');
-      if (el) el.textContent = (t.ten_truong||'TH Thanh Ngọc').replace('Trường ','');
-      diemBuildKhoi();
-    } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai'; }
+      if (el) el.textContent = (t.ten_truong||'').replace('Trường ','');
+      if (diemRole==='gvcn') {
+        // GV chỉ thấy lớp mình
+        document.getElementById('diemRoleInfo').innerHTML = '<i class="fas fa-user"></i> GVCN: '+(r.gvcn||'')+' — Lớp '+diemMyLop;
+        diemKhoi = diemMyLop[0];
+        diemLopCur = diemMyLop;
+        diemBuildKhoi();
+        diemLoadLop();
+      } else {
+        document.getElementById('diemRoleInfo').innerHTML = '<i class="fas fa-user-shield"></i> Quản trị viên — Tất cả lớp';
+        diemBuildKhoi();
+      }
+    } else { msg.className='adm-msg err'; msg.textContent=r.error||'Sai mật khẩu'; }
   } catch(e) { msg.className='adm-msg err'; msg.textContent='Lỗi: '+e.message; }
 }
 function diemSetKy(btn, ky) {
@@ -1385,124 +1413,167 @@ function diemSetKy(btn, ky) {
 function diemBuildKhoi() {
   const khois = getKhoiStats();
   const el = document.getElementById('diemKhoiBtns');
-  el.innerHTML = Object.keys(khois).sort().map(k =>
-    '<button class="dkh'+(k===diemKhoi?' active':'')+'" onclick="diemSetKhoi(this,&#39;'+k+'&#39;)"><i class="fas fa-layer-group"></i> Khối '+k+' <span style="opacity:.6;font-size:11px">('+khois[k].lops.length+' lớp)</span></button>'
-  ).join('');
+  if (diemRole==='gvcn') {
+    // GV chỉ thấy khối của mình
+    el.innerHTML = '<button class="dkh active"><i class="fas fa-layer-group"></i> Khối '+diemKhoi+'</button>';
+    document.getElementById('dLop').innerHTML = '<option value="'+diemMyLop+'">Lớp '+diemMyLop+'</option>';
+    document.getElementById('dLop').disabled = true;
+  } else {
+    el.innerHTML = Object.keys(khois).sort().map(k =>
+      '<button class="dkh'+(k===diemKhoi?' active':'')+'" onclick="diemSetKhoi(this,&#39;'+k+'&#39;)"><i class="fas fa-layer-group"></i> Khối '+k+' <span style="opacity:.6;font-size:11px">('+khois[k].lops.length+')</span></button>'
+    ).join('');
+  }
 }
 function diemSetKhoi(btn, khoi) {
   diemKhoi = khoi;
   document.querySelectorAll('.dkh').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const khois = getKhoiStats();
-  const info = khois[khoi];
-  if (!info) return;
+  const info = khois[khoi]; if (!info) return;
   const sel = document.getElementById('dLop');
-  sel.innerHTML = '<option value="">-- Chọn lớp --</option>'+info.lops.map(l=>'<option value="'+l.lop+'">Lớp '+l.lop+' ('+l.ss+' HS)</option>').join('');
+  sel.innerHTML = '<option value="">-- Chọn lớp --</option>'+info.lops.map(l=>'<option value="'+l.lop+'">Lớp '+l.lop+' ('+l.ss+')</option>').join('');
+  sel.disabled = false;
   diemLopCur = '';
-  document.getElementById('diemTableWrap').innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8"><i class="fas fa-arrow-left" style="font-size:32px;margin-bottom:12px;display:block"></i><p>Chọn lớp từ dropdown phía trên</p></div>';
+  document.getElementById('diemTableWrap').innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8"><p>Chọn lớp để nhập</p></div>';
 }
 async function diemLoadLop() {
   const lop = document.getElementById('dLop').value;
   if (!lop) return;
   diemLopCur = lop;
+  const khoi = lop[0];
   const wrap = document.getElementById('diemTableWrap');
-  wrap.innerHTML='<div style="text-align:center;padding:60px"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:#3b82f6"></i><p style="margin-top:12px;color:#64748b">Đang tải dữ liệu lớp '+lop+'...</p></div>';
-  // Load existing grades
+  wrap.innerHTML='<div style="text-align:center;padding:60px"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:#3b82f6"></i><p style="margin-top:12px;color:#64748b">Đang tải lớp '+lop+'...</p></div>';
   diemData = {};
-  try {
-    const r = await api({action:'getDiemLop',lop:lop,ky:diemKy});
-    if (r.success) diemData = r.data||{};
-  } catch(e) { console.error(e); }
-  // Get students
+  try { const r = await api({action:'getDiemLop',lop,ky:diemKy}); if(r.success) diemData=r.data||{}; } catch(e) {}
   const students = (D.hocSinh||[]).filter(h=>h.Ma_lop===lop).sort((a,b)=>(a.Ho_ten||'').localeCompare(b.Ho_ten||''));
-  // Info bar
+  const monList = getMonByKhoi(khoi);
+  const showKTDK = hasKTDK(diemKy);
   const nam = students.filter(h=>h.Gioi_tinh==='Nam').length;
-  document.getElementById('diemInfo').innerHTML = '<span><i class="fas fa-users"></i> '+students.length+' HS</span><span><i class="fas fa-mars"></i> Nam: '+nam+'</span><span><i class="fas fa-venus"></i> Nữ: '+(students.length-nam)+'</span><span><i class="fas fa-calendar"></i> Kỳ: '+diemKy+'</span>';
-  // Build table
+  document.getElementById('diemInfo').innerHTML = '<span><i class="fas fa-users"></i> '+students.length+' HS</span><span>Nam: '+nam+' | Nữ: '+(students.length-nam)+'</span><span>Kỳ: <strong>'+diemKy+'</strong></span><span>Khối '+khoi+' ('+monList.length+' môn'+(showKTDK?' + Điểm KTĐK':'')+' + 3NL + 5PC)</span>';
+  // Build table headers
   let html = '<table class="dtable"><thead><tr><th class="th-lop">Lớp</th><th class="th-name">Họ tên</th>';
-  ALL_MON_SHORT.forEach((m,i) => { html += '<th class="th-mon" title="'+ALL_MON[i]+'">'+m+'</th>'; });
-  html += '<th style="min-width:36px;position:sticky;right:0;background:#1e3a5f"></th></tr></thead><tbody>';
+  monList.forEach(m => {
+    html += '<th class="th-mon" title="'+m+'">'+(MON_SHORT[m]||m)+'</th>';
+    if (showKTDK && MON_KTDK.includes(m)) html += '<th class="th-mon" title="Điểm KTĐK '+m+'" style="background:#7c3aed;font-size:9px">Đ.'+( m==='Toán'?'T':'TV')+'</th>';
+  });
+  // NL headers
+  html += '<th class="th-mon" style="background:#065f46" colspan="1">|</th>';
+  NANG_LUC.forEach(n => html += '<th class="th-mon" style="background:#065f46" title="'+n+'">'+(NL_SHORT[n]||n)+'</th>');
+  PHAM_CHAT.forEach(p => html += '<th class="th-mon" style="background:#7c2d12" title="'+p+'">'+(PC_SHORT[p]||p)+'</th>');
+  html += '<th style="min-width:36px;position:sticky;right:0;background:#1e3a5f">✏️</th></tr></thead><tbody>';
+  // Build rows
   students.forEach(hs => {
     const maHS = String(hs.Ma_HS);
     const grades = diemData[maHS]||{};
-    html += '<tr data-ma="'+maHS+'">';
+    html += '<tr data-ma="'+maHS+'" data-name="'+hs.Ho_ten+'">';
     html += '<td class="td-lop">'+lop+'</td>';
     html += '<td class="td-name">'+hs.Ho_ten+'</td>';
-    ALL_MON.forEach((mon,i) => {
+    monList.forEach(mon => {
       const g = grades[mon]||{};
       const v = g.mucDG||'';
-      const isNL = i >= MON_HOC_FULL.length;
-      const levels = isNL ? NL_LEVELS : MH_LEVELS;
       const cls = v ? 'dg-'+v : 'dg-empty';
-      html += '<td><span class="dg-badge '+cls+'" data-mon="'+mon+'" data-isNL="'+(isNL?1:0)+'" onclick="diemToggle(this)">'+( v||'—')+'</span></td>';
+      html += '<td><span class="dg-badge '+cls+'" data-mon="'+mon+'" data-type="mh" onclick="diemToggle(this)">'+( v||'—')+'</span></td>';
+      if (showKTDK && MON_KTDK.includes(mon)) {
+        const dk = g.diemKTDK||'';
+        html += '<td><input class="dktdk-input" data-mon="'+mon+'" value="'+dk+'" style="width:36px;text-align:center;border:1px solid #e2e8f0;border-radius:4px;padding:2px;font-size:12px;font-weight:700" type="number" min="0" max="10" step="0.5"></td>';
+      }
     });
-    html += '<td class="td-act"><button class="diem-edit-btn" onclick="diemEditRow(&#39;'+maHS+'&#39;)" title="Nhận xét chi tiết"><i class="fas fa-pen"></i></button></td>';
+    // Separator + NL/PC
+    html += '<td style="color:#cbd5e1">│</td>';
+    NANG_LUC.forEach(n => {
+      const g = grades[n]||{};
+      const v = g.mucDG||'';
+      const cls = v ? 'dg-'+v : 'dg-empty';
+      html += '<td><span class="dg-badge '+cls+'" data-mon="'+n+'" data-type="nl" onclick="diemToggle(this)">'+(v||'—')+'</span></td>';
+    });
+    PHAM_CHAT.forEach(p => {
+      const g = grades[p]||{};
+      const v = g.mucDG||'';
+      const cls = v ? 'dg-'+v : 'dg-empty';
+      html += '<td><span class="dg-badge '+cls+'" data-mon="'+p+'" data-type="nl" onclick="diemToggle(this)">'+(v||'—')+'</span></td>';
+    });
+    html += '<td class="td-act"><button class="diem-edit-btn" onclick="diemEditRow(&#39;'+maHS+'&#39;)" title="Chi tiết"><i class="fas fa-pen"></i></button></td>';
     html += '</tr>';
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
 }
 function diemToggle(el) {
-  const isNL = el.getAttribute('data-isNL')==='1';
-  const levels = isNL ? NL_LEVELS : MH_LEVELS;
+  const type = el.getAttribute('data-type');
+  const levels = type==='nl' ? MUC_NLPC : MUC_MON;
   const cur = el.textContent.trim();
   let idx = levels.indexOf(cur);
-  idx = (idx+1) % (levels.length+1); // cycle: level1→level2→level3→empty→level1
+  idx = (idx+1) % (levels.length+1);
   const next = idx < levels.length ? levels[idx] : '';
   el.textContent = next || '—';
   el.className = 'dg-badge ' + (next ? 'dg-'+next : 'dg-empty');
-  // Mark dirty
-  el.setAttribute('data-dirty','1');
 }
 function diemFilterRows() {
   const q = (document.getElementById('dSearch').value||'').toLowerCase();
   document.querySelectorAll('.dtable tbody tr').forEach(tr => {
-    const name = tr.querySelector('.td-name');
-    if (!name) return;
-    tr.style.display = (!q || name.textContent.toLowerCase().includes(q)) ? '' : 'none';
+    const name = tr.getAttribute('data-name')||'';
+    tr.style.display = (!q || name.toLowerCase().includes(q)) ? '' : 'none';
   });
 }
 async function diemSaveLop() {
   if (!diemLopCur || !diemPw) return;
-  // Collect all grades from table
+  const khoi = diemLopCur[0];
+  const monList = getMonByKhoi(khoi);
+  const allMon = monList.concat(NANG_LUC).concat(PHAM_CHAT);
+  const showKTDK = hasKTDK(diemKy);
   const grades = [];
   document.querySelectorAll('.dtable tbody tr').forEach(tr => {
     const maHS = tr.getAttribute('data-ma');
-    const name = tr.querySelector('.td-name').textContent;
+    const name = tr.getAttribute('data-name');
     tr.querySelectorAll('.dg-badge').forEach(badge => {
       const v = badge.textContent.trim();
+      const mon = badge.getAttribute('data-mon');
+      // Also get KTDK score if applicable
+      let dk = '';
+      if (showKTDK && MON_KTDK.includes(mon)) {
+        const inp = tr.querySelector('.dktdk-input[data-mon="'+mon+'"]');
+        if (inp) dk = inp.value.trim();
+      }
       if (v && v !== '—') {
-        grades.push({maHS, hoTen:name, mon:badge.getAttribute('data-mon'), mucDG:v, nhanXet:''});
+        grades.push({maHS, hoTen:name, mon, mucDG:v, diemKTDK:dk, nhanXet:''});
+      } else if (dk) {
+        grades.push({maHS, hoTen:name, mon, mucDG:'', diemKTDK:dk, nhanXet:''});
       }
     });
   });
-  if (!grades.length) { alert('Chưa có dữ liệu để lưu'); return; }
+  if (!grades.length) { alert('Chưa có dữ liệu'); return; }
   const info = document.getElementById('diemInfo');
-  const oldHTML = info.innerHTML;
+  const old = info.innerHTML;
   info.innerHTML = '<span style="color:#f59e0b"><i class="fas fa-spinner fa-spin"></i> Đang lưu '+grades.length+' bản ghi...</span>';
   try {
-    const body = JSON.stringify({password:diemPw, lop:diemLopCur, ky:diemKy, nguoiNhap:'GV', grades});
+    const body = JSON.stringify({password:diemPw, lop:diemLopCur, ky:diemKy, nguoiNhap:diemRole, grades});
     const r = await fetch(GAS_URL+'?action=nhapDiemLop', {method:'POST', body, headers:{'Content-Type':'text/plain'}});
     const j = await r.json();
-    if (j.success) {
-      info.innerHTML = '<span style="color:#16a34a"><i class="fas fa-check-circle"></i> ✓ '+j.msg+'</span>';
-      setTimeout(()=>{ info.innerHTML = oldHTML; }, 3000);
-    } else {
-      info.innerHTML = '<span style="color:#dc2626"><i class="fas fa-exclamation-circle"></i> '+j.error+'</span>';
-    }
+    if (j.success) { info.innerHTML = '<span style="color:#16a34a"><i class="fas fa-check-circle"></i> ✓ '+j.msg+'</span>'; setTimeout(()=>{info.innerHTML=old;},3000); }
+    else { info.innerHTML = '<span style="color:#dc2626">'+j.error+'</span>'; }
   } catch(e) { info.innerHTML = '<span style="color:#dc2626">Lỗi: '+e.message+'</span>'; }
 }
 function diemExportExcel() {
   if (!diemLopCur) { alert('Chọn lớp trước'); return; }
+  const khoi = diemLopCur[0];
+  const monList = getMonByKhoi(khoi);
+  const allMon = monList.concat(NANG_LUC).concat(PHAM_CHAT);
+  const showKTDK = hasKTDK(diemKy);
+  const header = ['Lớp','Họ tên','Mã HS'];
+  monList.forEach(m => { header.push(m); if (showKTDK && MON_KTDK.includes(m)) header.push('Điểm KTĐK '+m); });
+  NANG_LUC.forEach(n => header.push(n));
+  PHAM_CHAT.forEach(p => header.push(p));
   const students = (D.hocSinh||[]).filter(h=>h.Ma_lop===diemLopCur).sort((a,b)=>(a.Ho_ten||'').localeCompare(b.Ho_ten||''));
-  const header = ['Lớp','Họ tên','Mã HS'].concat(ALL_MON);
   const rows = students.map(hs => {
     const g = diemData[String(hs.Ma_HS)]||{};
-    return [diemLopCur, hs.Ho_ten, hs.Ma_HS].concat(ALL_MON.map(m => (g[m]||{}).mucDG||''));
+    const row = [diemLopCur, hs.Ho_ten, hs.Ma_HS];
+    monList.forEach(m => { row.push((g[m]||{}).mucDG||''); if (showKTDK && MON_KTDK.includes(m)) row.push((g[m]||{}).diemKTDK||''); });
+    NANG_LUC.forEach(n => row.push((g[n]||{}).mucDG||''));
+    PHAM_CHAT.forEach(p => row.push((g[p]||{}).mucDG||''));
+    return row;
   });
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
-  XLSX.utils.book_append_sheet(wb, ws, 'Diem_'+diemLopCur+'_'+diemKy);
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([header,...rows]), 'Diem');
   XLSX.writeFile(wb, 'Diem_'+diemLopCur+'_'+diemKy+'.xlsx');
 }
 async function diemImportExcel() {
@@ -1511,38 +1582,29 @@ async function diemImportExcel() {
   try {
     const data = await input.files[0].arrayBuffer();
     const wb = XLSX.read(data);
-    const ws = wb.Sheets[wb.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:''});
     if (rows.length < 2) { alert('File trống'); return; }
     const header = rows[0];
-    // Map columns to mon names
+    const khoi = diemLopCur[0];
+    const allMon = getMonByKhoi(khoi).concat(NANG_LUC).concat(PHAM_CHAT);
     const monMap = {};
-    header.forEach((h,i) => {
-      const idx = ALL_MON.findIndex(m => m === h || h.includes(m));
-      if (idx >= 0) monMap[i] = ALL_MON[idx];
-    });
-    // Update table
+    header.forEach((h,i) => { const idx = allMon.findIndex(m => m===h || h.includes(m)); if(idx>=0) monMap[i]=allMon[idx]; });
     let updated = 0;
-    for (let r = 1; r < rows.length; r++) {
-      const maHS = String(rows[r][2]||'').trim(); // col C = Mã HS
+    for (let r=1; r<rows.length; r++) {
+      const maHS = String(rows[r][2]||'').trim();
       if (!maHS) continue;
       const tr = document.querySelector('.dtable tbody tr[data-ma="'+maHS+'"]');
       if (!tr) continue;
-      Object.keys(monMap).forEach(colIdx => {
-        const mon = monMap[colIdx];
-        const val = String(rows[r][colIdx]||'').trim().toUpperCase();
+      Object.keys(monMap).forEach(ci => {
+        const mon = monMap[ci];
+        const val = String(rows[r][ci]||'').trim();
         if (!val) return;
         const badge = tr.querySelector('.dg-badge[data-mon="'+mon+'"]');
-        if (badge) {
-          badge.textContent = val;
-          badge.className = 'dg-badge dg-'+val;
-          badge.setAttribute('data-dirty','1');
-          updated++;
-        }
+        if (badge) { badge.textContent=val; badge.className='dg-badge dg-'+val; updated++; }
       });
     }
-    alert('Đã nhập '+updated+' ô từ Excel. Nhấn "Lưu lên Sheets" để lưu.');
-  } catch(e) { alert('Lỗi đọc file: '+e.message); }
+    alert('Đã nhập '+updated+' ô. Nhấn "Lưu lên Sheets" để lưu.');
+  } catch(e) { alert('Lỗi: '+e.message); }
   input.value = '';
 }
 function diemEditRow(maHS) {
@@ -1550,68 +1612,58 @@ function diemEditRow(maHS) {
   if (!hs) return;
   const tr = document.querySelector('.dtable tbody tr[data-ma="'+maHS+'"]');
   if (!tr) return;
-  // Collect current grades from badges
+  const khoi = hs.Ma_lop[0];
+  const monList = getMonByKhoi(khoi);
+  const showKTDK = hasKTDK(diemKy);
   const grades = {};
-  tr.querySelectorAll('.dg-badge').forEach(b => {
-    const v = b.textContent.trim();
-    if (v && v !== '—') grades[b.getAttribute('data-mon')] = v;
-  });
-  // Build modal with nhận xét for each mon
+  tr.querySelectorAll('.dg-badge').forEach(b => { const v=b.textContent.trim(); if(v&&v!=='—') grades[b.getAttribute('data-mon')]=v; });
+  const ktdkVals = {};
+  tr.querySelectorAll('.dktdk-input').forEach(inp => { if(inp.value) ktdkVals[inp.getAttribute('data-mon')]=inp.value; });
   let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">';
-  html += '<div style="background:#fff;border-radius:20px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">';
-  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="color:#1e3a5f">📝 Học bạ: '+hs.Ho_ten+'</h3><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8">✕</button></div>';
-  html += '<div style="font-size:13px;color:#64748b;margin-bottom:16px">Lớp '+hs.Ma_lop+' · '+hs.Ngay_sinh+' · '+hs.Gioi_tinh+'</div>';
-  // Môn học section
-  html += '<h4 style="margin-bottom:10px;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px">📘 1. Các môn học và hoạt động giáo dục</h4>';
-  html += '<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px"><thead><tr style="background:#f1f5f9"><th style="text-align:left;padding:8px">Môn học</th><th style="padding:8px;width:80px">Mức đạt</th><th style="text-align:left;padding:8px">Nhận xét</th></tr></thead><tbody>';
-  MON_HOC_FULL.forEach(mon => {
+  html += '<div style="background:#fff;border-radius:20px;max-width:750px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:16px"><h3 style="color:#1e3a5f">📝 '+hs.Ho_ten+' — Lớp '+hs.Ma_lop+' — '+diemKy+'</h3><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;font-size:22px;cursor:pointer">✕</button></div>';
+  // Môn học
+  html += '<h4 style="margin-bottom:8px;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px">📘 1. Các môn học và hoạt động giáo dục</h4>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px"><thead><tr style="background:#f1f5f9"><th style="text-align:left;padding:6px">Môn học</th><th style="width:70px;padding:6px">Mức đạt</th>'+(showKTDK?'<th style="width:70px;padding:6px">Điểm KTĐK</th>':'')+'<th style="text-align:left;padding:6px">Nhận xét</th></tr></thead><tbody>';
+  monList.forEach(mon => {
     const v = grades[mon]||'';
-    const cls = v ? 'dg-'+v : '';
-    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600">'+mon+'</td><td style="padding:8px;text-align:center">'+(v?'<span class="dg-badge '+cls+'">'+v+'</span>':'<span style="color:#cbd5e1">—</span>')+'</td><td style="padding:8px"><input class="nx-input" data-mon="'+mon+'" placeholder="Nhận xét..." style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
+    const dk = ktdkVals[mon]||'';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px;font-weight:600">'+mon+'</td><td style="text-align:center;padding:6px">'+(v?'<span class="dg-badge dg-'+v+'">'+v+'</span>':'—')+'</td>';
+    if (showKTDK) html += '<td style="text-align:center;padding:6px">'+(MON_KTDK.includes(mon)?'<input class="nx-ktdk" data-mon="'+mon+'" value="'+dk+'" style="width:40px;text-align:center;border:1px solid #e2e8f0;border-radius:4px;padding:2px;font-weight:700" type="number" min="0" max="10" step="0.5">':'—')+'</td>';
+    html += '<td style="padding:6px"><input class="nx-input" data-mon="'+mon+'" placeholder="Nhận xét..." style="width:100%;padding:4px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
   });
   html += '</tbody></table>';
-  // NL/PC section
-  html += '<h4 style="margin-bottom:10px;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px">💜 2. Năng lực & Phẩm chất</h4>';
-  html += '<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px"><tbody>';
-  NLPC_FULL.forEach(mon => {
-    const v = grades[mon]||'';
-    const cls = v ? 'dg-'+v : '';
-    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600">'+mon+'</td><td style="padding:8px;text-align:center;width:80px">'+(v?'<span class="dg-badge '+cls+'">'+v+'</span>':'<span style="color:#cbd5e1">—</span>')+'</td><td style="padding:8px"><input class="nx-input" data-mon="'+mon+'" placeholder="Nhận xét..." style="width:100%;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
+  // NL + PC
+  html += '<h4 style="margin-bottom:8px;color:#1e3a5f;border-bottom:2px solid #e2e8f0;padding-bottom:6px">💜 2. Những phẩm chất chủ yếu & Năng lực cốt lõi</h4>';
+  html += '<table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px"><tbody>';
+  NANG_LUC.concat(PHAM_CHAT).forEach(n => {
+    const v = grades[n]||'';
+    html += '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px;font-weight:600">'+n+'</td><td style="text-align:center;padding:6px;width:70px">'+(v?'<span class="dg-badge dg-'+v+'">'+v+'</span>':'—')+'</td><td style="padding:6px"><input class="nx-input" data-mon="'+n+'" placeholder="Nhận xét..." style="width:100%;padding:4px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit"></td></tr>';
   });
   html += '</tbody></table>';
-  // Buttons
-  html += '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">';
-  html += '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:10px 20px;border:1px solid #e2e8f0;background:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;color:#64748b">Đóng</button>';
-  html += '<button onclick="diemAINx(&#39;'+maHS+'&#39;)" style="padding:10px 20px;border:none;background:#8b5cf6;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-robot"></i> AI Nhận xét</button>';
-  html += '<button onclick="diemSaveNx(&#39;'+maHS+'&#39;)" style="padding:10px 20px;border:none;background:#2563eb;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-save"></i> Lưu</button>';
-  html += '</div></div></div>';
+  html += '<div style="display:flex;gap:10px;justify-content:flex-end"><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:10px 20px;border:1px solid #e2e8f0;background:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;color:#64748b">Đóng</button>';
+  html += '<button onclick="diemAINx(&#39;'+maHS+'&#39;)" style="padding:10px 20px;border:none;background:#8b5cf6;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600">🤖 AI Nhận xét</button>';
+  html += '<button onclick="diemSaveNx(&#39;'+maHS+'&#39;)" style="padding:10px 20px;border:none;background:#2563eb;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600">💾 Lưu</button></div>';
+  html += '</div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
 }
 async function diemAINx(maHS) {
   const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
   if (!hs) return;
-  const inputs = document.querySelectorAll('.nx-input');
-  // Collect grades from modal badges
   const grades = [];
   document.querySelectorAll('div[style*="fixed"] .dg-badge').forEach(b => {
-    const v = b.textContent.trim();
-    if (v && v!=='—') grades.push(b.closest('tr').querySelector('td').textContent+': '+v);
+    const v = b.textContent.trim(); if(v&&v!=='—') grades.push(b.closest('tr').querySelector('td').textContent+': '+v);
   });
   if (!grades.length) { alert('Chưa có mức đánh giá'); return; }
-  inputs.forEach(inp => inp.value = '⏳ Đang tạo...');
+  const inputs = document.querySelectorAll('.nx-input');
+  inputs.forEach(inp => inp.value = '⏳ ...');
   try {
-    const prompt = 'Bạn là giáo viên tiểu học Việt Nam. Học sinh '+hs.Ho_ten+' lớp '+hs.Ma_lop+' có kết quả: '+grades.join(', ')+'. Hãy viết nhận xét cho TỪNG môn (mỗi môn 1 câu ngắn 8-15 từ, tích cực khích lệ). Trả về dạng JSON object: {"Toán":"...","Tiếng Việt":"...",...}. Chỉ trả về JSON, không giải thích.';
-    const r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:'Bạn là GVCN tiểu học VN. HS '+hs.Ho_ten+' lớp '+hs.Ma_lop+' kết quả: '+grades.join(', ')+'. Viết nhận xét TỪNG môn/NL/PC (mỗi cái 1 câu 8-15 từ, tích cực). Trả về JSON: {"Toán":"...","Tiếng Việt":"...",...}. Chỉ JSON.'}]})});
     const j = await r.json();
     const text = (j.content&&j.content[0]&&j.content[0].text)||'{}';
-    const clean = text.replace(/```json|```/g,'').trim();
-    const nx = JSON.parse(clean);
-    inputs.forEach(inp => {
-      const mon = inp.getAttribute('data-mon');
-      if (nx[mon]) inp.value = nx[mon];
-      else inp.value = '';
-    });
-  } catch(e) { inputs.forEach(inp => inp.value = ''); alert('Lỗi AI: '+e.message); }
+    const nx = JSON.parse(text.replace(/```json|```/g,'').trim());
+    inputs.forEach(inp => { const mon=inp.getAttribute('data-mon'); inp.value=nx[mon]||''; });
+  } catch(e) { inputs.forEach(inp=>inp.value=''); alert('Lỗi AI: '+e.message); }
 }
 async function diemSaveNx(maHS) {
   const hs = (D.hocSinh||[]).find(h=>String(h.Ma_HS)===maHS);
@@ -1620,19 +1672,21 @@ async function diemSaveNx(maHS) {
   document.querySelectorAll('.nx-input').forEach(inp => {
     const mon = inp.getAttribute('data-mon');
     const nx = inp.value.trim();
-    // Get grade from badge in same row
     const badge = inp.closest('tr').querySelector('.dg-badge');
     const mucDG = badge ? badge.textContent.trim() : '';
-    if (nx || (mucDG && mucDG !== '—')) {
-      items.push({maHS, hoTen:hs.Ho_ten, lop:hs.Ma_lop, ky:diemKy, mon, mucDG:mucDG==='—'?'':mucDG, nhanXet:nx});
+    let dk = '';
+    const dkInp = inp.closest('tr').querySelector('.nx-ktdk[data-mon="'+mon+'"]');
+    if (dkInp) dk = dkInp.value.trim();
+    if (nx || (mucDG && mucDG !== '—') || dk) {
+      items.push({maHS, hoTen:hs.Ho_ten, lop:hs.Ma_lop, ky:diemKy, mon, mucDG:mucDG==='—'?'':mucDG, diemKTDK:dk, nhanXet:nx});
     }
   });
   if (!items.length) { alert('Không có dữ liệu'); return; }
   try {
-    const q = 'action=nhapDiemBatch&data='+encodeURIComponent(JSON.stringify({password:diemPw,nguoiNhap:'GV',items}));
-    const r = await fetch(GAS_URL+'?'+q);
+    const body = JSON.stringify({password:diemPw, lop:hs.Ma_lop, ky:diemKy, nguoiNhap:diemRole, grades:items});
+    const r = await fetch(GAS_URL+'?action=nhapDiemLop', {method:'POST', body, headers:{'Content-Type':'text/plain'}});
     const j = await r.json();
-    if (j.success) { alert('✓ '+j.msg); document.querySelector('div[style*="fixed"]').remove(); }
+    if (j.success) { alert('✓ '+j.msg); document.querySelector('div[style*="fixed"]').remove(); diemLoadLop(); }
     else alert(j.error||'Lỗi');
   } catch(e) { alert('Lỗi: '+e.message); }
 }
