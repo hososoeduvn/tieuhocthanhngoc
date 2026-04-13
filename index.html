@@ -1084,19 +1084,29 @@ function renderHoSo() {
     hsAccEl.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--tm)"><i class="fas fa-inbox" style="font-size:48px;color:var(--tl);margin-bottom:16px;display:block"></i><p style="font-size:15px;margin-bottom:8px"><strong>Chưa có dữ liệu hồ sơ</strong></p><p style="font-size:13px">Kiểm tra sheet HO_SO_SO trên Google Sheet hoặc xem Console (F12) để biết chi tiết lỗi kết nối.</p></div>';
     return;
   }
-  // Build tree from flat rows. Prefer Cap+Ma_cha columns; fallback: parse dots from Ma_ho_so.
+  // Build tree from flat rows. ALWAYS derive parent from dot-splitting (most reliable).
   const byMa = {}; const roots = [];
   D.hoSo.forEach(it => {
     const ma = String(it.Ma_ho_so||'').trim();
     if (!ma) return;
     const cap = parseInt(it.Cap) || ma.split('.').length;
-    let parent = String(it.Ma_cha||'').trim();
-    if (!parent && cap > 1) parent = ma.split('.').slice(0,-1).join('.');
-    byMa[ma] = { ma, ten:it.Ten_ho_so||'', cap, parent, tt:it.TT||'', st:it.Trang_thai||'', link:it.Link_drive||'', children:[] };
+    byMa[ma] = { ma, ten:it.Ten_ho_so||'', cap, parent:'', tt:it.TT||'', st:it.Trang_thai||'', link:it.Link_drive||'', children:[] };
   });
+  // Link parents: walk up dot chain to find nearest existing parent
   Object.values(byMa).forEach(n => {
-    if (n.parent && byMa[n.parent]) byMa[n.parent].children.push(n);
-    else roots.push(n);
+    let parts = n.ma.split('.');
+    let found = false;
+    while (parts.length > 1) {
+      parts.pop();
+      let candidate = parts.join('.');
+      if (byMa[candidate]) {
+        n.parent = candidate;
+        byMa[candidate].children.push(n);
+        found = true;
+        break;
+      }
+    }
+    if (!found) roots.push(n);
   });
   // Sort roots and children by numeric ma_ho_so
   const cmp = (a,b) => {
