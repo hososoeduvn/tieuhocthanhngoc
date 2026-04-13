@@ -7,6 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 <style>
 /* =====================================================
    📚 TEMPLATE HỒ SƠ SỐ TRƯỜNG TIỂU HỌC
@@ -699,6 +701,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
             <input type="file" id="diemImportFile" accept=".xlsx,.xls" style="display:none" onchange="diemImportExcel()">
             <button class="dbtn dbtn-o" onclick="diemSaveLop()"><i class="fas fa-cloud-upload-alt"></i> Lưu lên Sheets</button>
             <button class="dbtn" style="background:#faf5ff;color:#7c3aed" onclick="diemAutoEval()" id="btnAutoEval" title="Tự động đánh giá xếp loại cuối năm"><i class="fas fa-magic"></i> Xếp loại CN</button>
+            <button class="dbtn" style="background:#fdf2f8;color:#be185d" onclick="hbExportClass()" title="Xuất học bạ cả lớp ra Word"><i class="fas fa-file-pdf"></i> HB cả lớp</button>
           </div>
         </div>
         <div class="diem-info" id="diemInfo"></div>
@@ -773,7 +776,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-grad);backgroun
       <li><strong>4 ô thông tin</strong>: Chiều cao, Cân nặng, Nghỉ có phép, Nghỉ không phép</li>
       <li><strong>Bảng Môn học</strong>: Mức đạt (badge T/H/C) + Điểm KTĐK + Nhận xét (input)</li>
       <li><strong>Bảng NL & PC</strong>: 3 năng lực + 5 phẩm chất</li>
-      <li><strong>4 nút</strong>: Đóng | Xuất Word | 🤖 AI Nhận xét | Lưu</li>
+      <li><strong>4 nút</strong>: Đóng | Xuất PDF | 🤖 AI Nhận xét | Lưu</li>
     </ul>
   </div>
 
@@ -1718,87 +1721,166 @@ function mcSyncToTable(badge) {
 }
 
 // ===== XUẤT HỌC BẠ DOCX =====
-function hbExportWord(maHS) {
+// ===== XUẤT HỌC BẠ PDF (jsPDF + autoTable) =====
+const NL_DT_K12 = ['Ngôn ngữ','Tính toán','Khoa học','Thẩm mĩ','Thể chất'];
+const NL_DT_K3 = ['Ngôn ngữ','Tính toán','Khoa học','Công nghệ','Tin học','Thẩm mĩ','Thể chất'];
+const NL_DT_K45 = ['Ngôn ngữ','Tính toán','Khoa học','Công nghệ','Tin học','Thẩm mĩ','Thể chất'];
+function getNLDTByKhoi(k) { k=parseInt(k); return k<=2?NL_DT_K12:NL_DT_K3; }
+
+function hbExportWord(maHS) { hbExportPDF(maHS); } // backward compat
+function hbExportPDF(maHS) {
   var hs = (D.hocSinh||[]).find(function(h){return String(h.Ma_HS)===String(maHS)});
   if (!hs) { alert('Không tìm thấy HS'); return; }
-  // Collect data from modal
-  var rows = [];
-  document.querySelectorAll('div[style*="fixed"] table tbody tr').forEach(function(tr) {
-    var tds = tr.querySelectorAll('td');
-    if (tds.length < 3) return;
-    var mon = tds[0].textContent.trim();
-    var badge = tds[1].querySelector('span[style*="border-radius"]');
-    var muc = badge ? badge.textContent.trim() : '';
-    var diem = tds.length > 2 ? (tds[2].textContent||'').trim() : '';
-    var nxInput = tr.querySelector('.hb-nx');
-    var nx = nxInput ? nxInput.value : '';
-    if (muc === '—') muc = '';
-    if (diem === '—') diem = '';
-    rows.push({mon:mon, muc:muc, diem:diem, nx:nx});
+  collectModalData(hs);
+  var pdf = buildHocBaPDF(hs);
+  pdf.save('HocBa_'+hs.Ho_ten.replace(/\s+/g,'_')+'_'+hs.Ma_lop+'.pdf');
+}
+function hbExportClass() {
+  if (!diemLopCur) { alert('Chọn lớp trước'); return; }
+  var students = (D.hocSinh||[]).filter(function(h){return h.Ma_lop===diemLopCur}).sort(function(a,b){return (a.Ho_ten||'').localeCompare(b.Ho_ten||'')});
+  if (!students.length) { alert('Không có HS'); return; }
+  var pdf = new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  students.forEach(function(hs, i) {
+    if (i > 0) pdf.addPage();
+    addHocBaPages(pdf, hs);
   });
-  // Get signature from localStorage
-  var sigGVCN = localStorage.getItem('sig_gvcn')||'';
-  var sigHT = localStorage.getItem('sig_ht')||'';
-  var t = D.thongTin||{};
-  // Build Word HTML
-  var docHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>';
-  docHtml += 'body{font-family:"Times New Roman",serif;font-size:13pt;margin:2cm}';
-  docHtml += 'h2{text-align:center;font-size:16pt;margin-bottom:4pt}';
-  docHtml += 'h3{font-size:14pt;margin:12pt 0 6pt}';
-  docHtml += 'table{width:100%;border-collapse:collapse;margin:8pt 0}';
-  docHtml += 'td,th{border:1px solid #000;padding:4pt 6pt;font-size:12pt}';
-  docHtml += 'th{background:#f0f0f0;font-weight:bold;text-align:center}';
-  docHtml += '.center{text-align:center} .bold{font-weight:bold}';
-  docHtml += '.sig-area{display:flex;justify-content:space-between;margin-top:30pt}';
-  docHtml += '.sig-box{text-align:center;width:45%}';
-  docHtml += '.sig-box img{max-height:60pt;margin:8pt 0}';
-  docHtml += '</style></head><body>';
-  docHtml += '<p class="center">'+(t.ten_truong||'').toUpperCase()+'</p>';
-  docHtml += '<h2>HỌC BẠ</h2>';
-  docHtml += '<p><b>Họ và tên:</b> '+hs.Ho_ten+' &nbsp; <b>Lớp:</b> '+hs.Ma_lop+' &nbsp; <b>Ngày sinh:</b> '+fmtDate(hs.Ngay_sinh)+'</p>';
-  docHtml += '<p><b>Giới tính:</b> '+(hs.Gioi_tinh||'')+' &nbsp; <b>Dân tộc:</b> '+(hs.Dan_toc||'')+' &nbsp; <b>Nơi sinh:</b> '+(hs.Noi_sinh||'')+'</p>';
-  docHtml += '<p><b>Họ tên cha:</b> '+(hs.Ho_ten_cha||'')+' &nbsp; <b>Họ tên mẹ:</b> '+(hs.Ho_ten_me||'')+'</p>';
-  // Section 1: Môn học
-  docHtml += '<h3>1. Các môn học và hoạt động giáo dục</h3>';
-  docHtml += '<table><tr><th>Môn học</th><th style="width:60pt">Mức đạt</th><th style="width:60pt">Điểm KTĐK</th><th>Nhận xét</th></tr>';
-  var nlStart = -1;
-  rows.forEach(function(r, i) {
-    if (r.mon === 'Tự chủ và tự học' || r.mon === 'Yêu nước') { if(nlStart<0) nlStart=i; return; }
-    if (nlStart >= 0) return; // skip NL/PC rows for section 1
-    docHtml += '<tr><td>'+r.mon+'</td><td class="center bold">'+r.muc+'</td><td class="center bold">'+(r.diem||'')+'</td><td>'+r.nx+'</td></tr>';
-  });
-  docHtml += '</table>';
-  // Section 2: NL
-  docHtml += '<h3>2. Những phẩm chất chủ yếu</h3>';
-  docHtml += '<table><tr><th>Phẩm chất / Năng lực</th><th style="width:60pt">Mức đạt</th><th>Nhận xét</th></tr>';
-  if (nlStart >= 0) {
-    for (var i = nlStart; i < rows.length; i++) {
-      docHtml += '<tr><td>'+rows[i].mon+'</td><td class="center bold">'+rows[i].muc+'</td><td>'+rows[i].nx+'</td></tr>';
-    }
+  pdf.save('HocBa_Lop_'+diemLopCur+'.pdf');
+}
+function collectModalData(hs) {
+  var maHS = String(hs.Ma_HS);
+  var grades = diemData[maHS]||{};
+  var modal = document.querySelector('div[style*="fixed"]');
+  if (modal) {
+    modal.querySelectorAll('.hb-nx').forEach(function(inp) { var m=inp.getAttribute('data-mon'); if(m&&inp.value){if(!grades[m])grades[m]={};grades[m].nhanXet=inp.value;} });
+    modal.querySelectorAll('.hb-score').forEach(function(inp) { var m=inp.getAttribute('data-mon'); if(m&&inp.value){if(!grades[m])grades[m]={};grades[m].diemKTDK=inp.value;} });
   }
-  docHtml += '</table>';
-  // Signatures
-  docHtml += '<div class="sig-area">';
-  docHtml += '<div class="sig-box"><p class="bold">Giáo viên chủ nhiệm</p>';
-  if (sigGVCN) docHtml += '<img src="'+sigGVCN+'">';
-  else docHtml += '<p style="margin-top:50pt">___________________</p>';
-  docHtml += '</div>';
-  docHtml += '<div class="sig-box"><p class="bold">Hiệu trưởng</p>';
-  if (sigHT) docHtml += '<img src="'+sigHT+'">';
-  else docHtml += '<p style="margin-top:50pt">___________________</p>';
-  docHtml += '<p>'+(t.hieu_truong||'')+'</p></div>';
-  docHtml += '</div>';
-  docHtml += '</body></html>';
-  // Download as .doc
-  var blob = new Blob(["\ufeff"+docHtml], {type:'application/msword'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'HocBa_'+hs.Ho_ten.replace(/\s+/g,'_')+'_'+hs.Ma_lop+'.doc';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  diemData[maHS] = grades;
+}
+function buildHocBaPDF(hs) {
+  var pdf = new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  addHocBaPages(pdf, hs);
+  return pdf;
+}
+function addHocBaPages(pdf, hs) {
+  var t = D.thongTin||{};
+  var khoi = parseInt(String(hs.Ma_lop||'')[0]);
+  var monList = getMonByKhoi(khoi);
+  var ktdkMon = getKtdkByKhoi(khoi);
+  var nldt = getNLDTByKhoi(khoi);
+  var grades = diemData[String(hs.Ma_HS)]||{};
+  var W = 210, H = 297, ML = 20, MR = 15, MT = 15, TW = W-ML-MR;
+  var sigGVCN = localStorage.getItem('sig_gvcn');
+  var sigHT = localStorage.getItem('sig_ht');
+  // === PAGE 1: Thông tin + Mục 1 ===
+  var y = MT;
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(13);
+  pdf.text('Họ và tên học sinh: '+hs.Ho_ten+'          Lớp: '+hs.Ma_lop, ML, y); y+=7;
+  pdf.setFont('helvetica','normal'); pdf.setFontSize(11);
+  pdf.text('Chiều cao: '+(hs.Chieu_cao||'......')+' cm          Cân nặng: '+(hs.Can_nang||'......')+' kg', ML, y); y+=6;
+  pdf.text('Số ngày nghỉ có phép: '+(hs.Nghi_co_phep||'......')+'          Số ngày nghỉ không phép: '+(hs.Nghi_khong_phep||'......'), ML, y); y+=8;
+  // Mục 1
+  pdf.setFont('helvetica','bolditalic'); pdf.setFontSize(12);
+  pdf.text('1. Các môn học và hoạt động giáo dục', ML, y); y+=3;
+  var monRows = monList.map(function(m) {
+    var g = grades[m]||{};
+    return [m, g.mucDG||'', ktdkMon.includes(m)?(g.diemKTDK||''):'', g.nhanXet||''];
+  });
+  pdf.autoTable({
+    startY: y, margin:{left:ML,right:MR},
+    head: [['Môn học và hoạt\nđộng giáo dục','Mức\nđạt được','Điểm\nKTĐK','Nhận xét']],
+    body: monRows,
+    styles:{font:'helvetica',fontSize:10,cellPadding:2,lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0]},
+    headStyles:{fillColor:[214,228,255],textColor:[0,0,0],fontStyle:'bold',halign:'center',fontSize:9},
+    columnStyles:{0:{cellWidth:40},1:{cellWidth:14,halign:'center'},2:{cellWidth:14,halign:'center'},3:{cellWidth:TW-68}},
+    theme:'grid'
+  });
+  // === PAGE 2: PC + NL ===
+  pdf.addPage(); y = MT;
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(11);
+  pdf.text('Trường: '+(t.ten_truong||'')+'          Năm học '+(t.nam_hoc||'2025-2026'), ML, y); y+=8;
+  // Mục 2: Phẩm chất
+  pdf.setFont('helvetica','bolditalic'); pdf.setFontSize(12);
+  pdf.text('2. Những phẩm chất chủ yếu', ML, y); y+=3;
+  var pcNx = ''; PHAM_CHAT.forEach(function(p){var g=grades[p]||{};if(g.nhanXet)pcNx=g.nhanXet;});
+  var pcRows = PHAM_CHAT.map(function(p,i){var g=grades[p]||{};return [p, g.mucDG||'', i===0?pcNx:''];});
+  pdf.autoTable({
+    startY: y, margin:{left:ML,right:MR},
+    head: [['Phẩm chất','Mức đạt\nđược','Nhận xét']],
+    body: pcRows,
+    styles:{font:'helvetica',fontSize:10,cellPadding:2,lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0]},
+    headStyles:{fillColor:[248,215,218],textColor:[0,0,0],fontStyle:'bold',halign:'center',fontSize:9},
+    columnStyles:{0:{cellWidth:30},1:{cellWidth:16,halign:'center'},2:{cellWidth:TW-46}},
+    theme:'grid',
+    didDrawCell:function(data){
+      if(data.section==='body'&&data.column.index===2&&data.row.index>0){
+        // merge effect: clear borders for merged rows
+      }
+    }
+  });
+  y = pdf.lastAutoTable.finalY + 6;
+  // Mục 3.1: NL chung
+  pdf.setFont('helvetica','bolditalic'); pdf.setFontSize(12);
+  pdf.text('3. Những năng lực cốt lõi', ML, y); y+=6;
+  pdf.setFontSize(11);
+  pdf.text('3.1 Những năng lực chung', ML, y); y+=3;
+  var nlNx = ''; NANG_LUC.forEach(function(n){var g=grades[n]||{};if(g.nhanXet)nlNx=g.nhanXet;});
+  var nlRows = NANG_LUC.map(function(n,i){var g=grades[n]||{};return [n, g.mucDG||'', i===0?nlNx:''];});
+  pdf.autoTable({
+    startY: y, margin:{left:ML,right:MR},
+    head: [['Năng lực','Mức đạt\nđược','Nhận xét']],
+    body: nlRows,
+    styles:{font:'helvetica',fontSize:10,cellPadding:2,lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0]},
+    headStyles:{fillColor:[209,231,221],textColor:[0,0,0],fontStyle:'bold',halign:'center',fontSize:9},
+    columnStyles:{0:{cellWidth:30},1:{cellWidth:16,halign:'center'},2:{cellWidth:TW-46}},
+    theme:'grid'
+  });
+  y = pdf.lastAutoTable.finalY + 6;
+  // Mục 3.2: NL đặc thù
+  pdf.setFont('helvetica','bolditalic'); pdf.setFontSize(11);
+  pdf.text('3.2 Những năng lực đặc thù', ML, y); y+=3;
+  var nldNx = ''; nldt.forEach(function(n){var g=grades[n]||{};if(g.nhanXet)nldNx=g.nhanXet;});
+  var nldRows = nldt.map(function(n,i){var g=grades[n]||{};return [n, g.mucDG||'', i===0?nldNx:''];});
+  pdf.autoTable({
+    startY: y, margin:{left:ML,right:MR},
+    head: [['Năng lực','Mức đạt\nđược','Nhận xét']],
+    body: nldRows,
+    styles:{font:'helvetica',fontSize:10,cellPadding:2,lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0]},
+    headStyles:{fillColor:[255,229,180],textColor:[0,0,0],fontStyle:'bold',halign:'center',fontSize:9},
+    columnStyles:{0:{cellWidth:30},1:{cellWidth:16,halign:'center'},2:{cellWidth:TW-46}},
+    theme:'grid'
+  });
+  y = pdf.lastAutoTable.finalY + 8;
+  // === Mục 4-6 ===
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(11);
+  pdf.text('4. Đánh giá kết quả giáo dục: ', ML, y);
+  pdf.setFont('helvetica','normal');
+  pdf.text('Hoàn thành.', ML+55, y); y+=7;
+  pdf.setFont('helvetica','bold');
+  pdf.text('5. Khen thưởng:', ML, y); y+=6;
+  pdf.setFont('helvetica','normal');
+  pdf.text('   - Không.', ML, y); y+=7;
+  pdf.setFont('helvetica','bold');
+  pdf.text('6. Hoàn thành chương trình lớp học/chương trình tiểu học:', ML, y); y+=6;
+  pdf.setFont('helvetica','normal');
+  pdf.text('   - Hoàn thành chương trình lớp '+hs.Ma_lop+'.', ML, y); y+=12;
+  // === Chữ ký ===
+  var addr = (t.dia_chi||'').split(',')[0]||'';
+  pdf.setFont('helvetica','italic'); pdf.setFontSize(11);
+  pdf.text(addr+', ngày ... tháng ... năm 2026', W-MR, y, {align:'right'}); y+=8;
+  // 2 cột ký
+  var midX = W/2;
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(12);
+  pdf.text('Xác nhận của Hiệu trưởng', ML+20, y, {align:'center'});
+  pdf.text('Giáo viên chủ nhiệm', midX+35, y, {align:'center'}); y+=5;
+  pdf.setFont('helvetica','italic'); pdf.setFontSize(9);
+  pdf.text('(Ký, ghi rõ họ tên và đóng dấu)', ML+20, y, {align:'center'});
+  pdf.text('(Ký và ghi rõ họ tên)', midX+35, y, {align:'center'}); y+=18;
+  // Signature images
+  if (sigHT) { try { pdf.addImage(sigHT,'PNG',ML,y,30,15); } catch(e){} }
+  if (sigGVCN) { try { pdf.addImage(sigGVCN,'PNG',midX+20,y,30,15); } catch(e){} }
+  y += 18;
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(12);
+  pdf.text(t.hieu_truong||'', ML+20, y, {align:'center'});
 }
 
 // ===== CHỮ KÝ ẢNH =====
@@ -1924,12 +2006,13 @@ const MON_KHOI = {
 const MON_SHORT = {'Toán':'Toán','Tiếng Việt':'T.Việt','Đạo đức':'Đ.đức','Tự nhiên và Xã hội':'TNXH','Khoa học':'Khoa','Lịch sử và Địa lí':'LS&ĐL','Ngoại ngữ':'NN','Tin học':'TH','Công nghệ':'CN','Giáo dục thể chất':'GDTC','Âm nhạc':'ÂN','Mĩ thuật':'MT','Hoạt động trải nghiệm':'HĐTN'};
 // Năng lực + Phẩm chất (3 NL + 5 PC)
 const NANG_LUC = ['Tự chủ và tự học','Giao tiếp và hợp tác','Giải quyết vấn đề và sáng tạo'];
+const NL_DAC_THU = ['Ngôn ngữ','Tính toán','Khoa học','Công nghệ','Tin học','Thẩm mĩ','Thể chất'];
 const PHAM_CHAT = ['Yêu nước','Nhân ái','Chăm chỉ','Trung thực','Trách nhiệm'];
 const NL_SHORT = {'Tự chủ và tự học':'Tự chủ','Giao tiếp và hợp tác':'Giao tiếp','Giải quyết vấn đề và sáng tạo':'GQVĐ'};
 const PC_SHORT = {'Yêu nước':'Y.nước','Nhân ái':'N.ái','Chăm chỉ':'C.chỉ','Trung thực':'T.thực','Trách nhiệm':'T.nhiệm'};
 // Môn có bài KTĐK (điểm số) - chỉ CK1, CN
 const KTDK_K12 = ['Toán','Tiếng Việt'];
-const KTDK_K3 = ['Toán','Tiếng Việt','Ngoại ngữ','Tin học'];
+const KTDK_K3 = ['Toán','Tiếng Việt','Ngoại ngữ','Tin học','Công nghệ'];
 const KTDK_K45 = ['Toán','Tiếng Việt','Khoa học','Lịch sử và Địa lí','Ngoại ngữ','Tin học','Công nghệ'];
 function getKtdkByKhoi(k) { k=parseInt(k); return k<=2?KTDK_K12:k===3?KTDK_K3:KTDK_K45; }
 const MON_KTDK = KTDK_K45; // backward compat — use getKtdkByKhoi() instead
@@ -2582,7 +2665,7 @@ async function viewHocBa(maHS) {
   html += '</tbody></table>';
   html += '<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid #e2e8f0;padding-top:16px">';
   html += '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="padding:10px 20px;border:1px solid #e2e8f0;background:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;color:#64748b">Đóng</button>';
-  html += '<button onclick="hbExportWord(\''+maHS+'\')" style="padding:10px 20px;border:2px solid #dc2626;background:#fff;color:#dc2626;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-file-word"></i> Xuất Word</button>';
+  html += '<button onclick="hbExportWord(\''+maHS+'\')" style="padding:10px 20px;border:2px solid #dc2626;background:#fff;color:#dc2626;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-file-pdf"></i> Xuất PDF</button>';
   html += '<button onclick="hbAINx(\''+maHS+'\')" style="padding:10px 20px;border:none;background:#7c3aed;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-robot"></i> AI Nhận xét</button>';
   html += '<button onclick="hbSave(\''+maHS+'\')" style="padding:10px 20px;border:none;background:#2563eb;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600"><i class="fas fa-save"></i> Lưu</button>';
   html += '</div></div></div></div>';
