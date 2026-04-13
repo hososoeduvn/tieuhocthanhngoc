@@ -892,6 +892,27 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbwMJ0RkbiYGdP7NMgEKGdvf
 
 const CACHE_KEY = 'HSS_CACHE_V3_TN';
 let D = { thongTin:{}, hoSo:[], giaoVien:[], hocSinh:[], soChuNhiem:[], hinhAnh:[], hoSoStats:null };
+
+// === Date format utility ===
+function fmtDate(v) {
+  if (!v) return '';
+  var s = String(v).trim();
+  // Already dd/mm/yyyy
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) return s;
+  // ISO: 1970-01-23T17:00:00.000Z
+  if (s.includes('T') || s.includes('-')) {
+    try {
+      var d = new Date(s);
+      if (!isNaN(d.getTime())) {
+        var dd = String(d.getDate()).padStart(2,'0');
+        var mm = String(d.getMonth()+1).padStart(2,'0');
+        var yy = d.getFullYear();
+        return dd+'/'+mm+'/'+yy;
+      }
+    } catch(e) {}
+  }
+  return s;
+}
 let nlCurRole = 'all';
 let clCurKy = 'GK1';
 
@@ -1174,7 +1195,7 @@ function nlFilter() {
   if(nlCurRole!=='all') list=list.filter(t=>{const r=(t.Chuc_vu||'').toLowerCase();if(nlCurRole==='bgh')return r.includes('hiệu trưởng')||r.includes('phó hiệu');if(nlCurRole==='nv')return r.includes('kế toán')||r.includes('y tế')||r.includes('nhân viên');return!r.includes('hiệu trưởng')&&!r.includes('phó hiệu')&&!r.includes('kế toán')&&!r.includes('y tế')&&!r.includes('nhân viên');});
   if(q) list=list.filter(t=>(t.Ho_ten||'').toLowerCase().includes(q)||(t.Chuc_vu||'').toLowerCase().includes(q)||(t.Email||'').toLowerCase().includes(q));
   document.getElementById('nlGrid').innerHTML=list.map(t=>{
-    const nm=t.Ho_ten||'';const cv=t.Chuc_vu||'';const ph=t.Dien_thoai||'';const em=t.Email||'';const lk=t.Link_ho_so||'';const td=t.Trinh_do||'';const nv=t.Nhiem_vu||'';const ns=t.Ngay_sinh||'';const gc=t.Ghi_chu||'';const ini=nm.split(' ').pop().charAt(0).toUpperCase();
+    const nm=t.Ho_ten||'';const cv=t.Chuc_vu||'';const ph=t.Dien_thoai||'';const em=t.Email||'';const lk=t.Link_ho_so||'';const td=t.Trinh_do||'';const nv=t.Nhiem_vu||'';const ns=fmtDate(t.Ngay_sinh||'');const gc=t.Ghi_chu||'';const ini=nm.split(' ').pop().charAt(0).toUpperCase();
     return '<div class="nl-c"><div class="nl-ch"><div class="nl-ca">'+ini+'</div><div class="nl-ci"><div class="nl-cn">'+nm+'</div><div class="nl-cr">'+cv+(gc?' • '+gc:'')+'</div></div><div class="nl-stt">'+(t.TT||'')+'</div></div><div class="nl-cb">'+(ns?'<div class="nl-row"><i class="fas fa-birthday-cake"></i><span>'+ns+'</span></div>':'')+(td?'<div class="nl-row"><i class="fas fa-graduation-cap"></i><span>'+td+'</span></div>':'')+(nv?'<div class="nl-row"><i class="fas fa-tasks"></i><span>'+nv+'</span></div>':'')+(ph?'<div class="nl-row"><i class="fas fa-phone"></i><a href="tel:'+ph+'">'+ph+'</a></div>':'')+(em?'<div class="nl-row"><i class="fas fa-envelope"></i><a href="mailto:'+em+'">'+em+'</a></div>':'')+'</div><div class="nl-cf">'+(lk?'<a href="'+lk+'" target="_blank" class="nl-lk has"><i class="fas fa-folder-open"></i> Hồ sơ số</a>':'<span class="nl-lk no"><i class="fas fa-folder"></i> Chưa cập nhật</span>')+'</div></div>';
   }).join('') || '<p style="grid-column:1/-1;text-align:center;color:var(--tm);padding:40px">Không tìm thấy</p>';
 }
@@ -1311,7 +1332,7 @@ function hbFilter() {
     const cha = h.Ho_ten_cha ? 'Cha: '+h.Ho_ten_cha : '';
     const me = h.Ho_ten_me ? 'Mẹ: '+h.Ho_ten_me : '';
     const ph = [cha,me].filter(Boolean).join(' • ');
-    return '<div class="hb-card"><h4>'+(h.Ho_ten||'')+'</h4><div class="hb-meta">'+(h.Ma_HS||'')+' • Lớp '+(h.Ma_lop||'')+'</div><div class="hb-info"><span><i class="fas fa-birthday-cake"></i> '+(h.Ngay_sinh||'')+'</span><span><i class="fas fa-venus-mars"></i> '+(h.Gioi_tinh||'')+'</span>'+(h.Dan_toc?'<span><i class="fas fa-globe"></i> '+h.Dan_toc+'</span>':'')+(h.SDT?'<span><i class="fas fa-phone"></i> '+h.SDT+'</span>':'')+'</div>'+(ph?'<div style="font-size:12px;color:var(--tm);margin-bottom:8px">'+ph+'</div>':'')+'<a class="hb-btn" href="#" onclick="viewHocBa(&#39;'+h.Ma_HS+'&#39;);return false"><i class="fas fa-eye"></i> Xem học bạ</a></div>';
+    return '<div class="hb-card"><h4>'+(h.Ho_ten||'')+'</h4><div class="hb-meta">'+(h.Ma_HS||'')+' • Lớp '+(h.Ma_lop||'')+'</div><div class="hb-info"><span><i class="fas fa-birthday-cake"></i> '+fmtDate(h.Ngay_sinh)+'</span><span><i class="fas fa-venus-mars"></i> '+(h.Gioi_tinh||'')+'</span>'+(h.Dan_toc?'<span><i class="fas fa-globe"></i> '+h.Dan_toc+'</span>':'')+(h.SDT?'<span><i class="fas fa-phone"></i> '+h.SDT+'</span>':'')+'</div>'+(ph?'<div style="font-size:12px;color:var(--tm);margin-bottom:8px">'+ph+'</div>':'')+'<a class="hb-btn" href="#" onclick="viewHocBa(&#39;'+h.Ma_HS+'&#39;);return false"><i class="fas fa-eye"></i> Xem học bạ</a></div>';
   }).join('') + (list.length>50?'<p style="text-align:center;color:var(--tm);padding:20px;grid-column:1/-1">Hiển thị 50/'+list.length+' — hãy lọc theo lớp hoặc tìm kiếm</p>':'') || '<p style="text-align:center;color:var(--tm);padding:40px;grid-column:1/-1">Không tìm thấy</p>';
 }
 
@@ -1575,7 +1596,7 @@ function scnTab(btn, tab, lop) {
     let html = '<div style="font-size:13px;color:var(--tm);margin-bottom:16px"><a href="#" onclick="scnBackToList();return false" style="color:var(--p)">Trang chủ</a> → Lớp '+lop+' → <strong>Danh sách HS</strong></div><h3 style="margin-bottom:16px;color:var(--tx)">📋 Danh sách học sinh Lớp '+lop+' ('+students.length+' HS)</h3>';
     html += '<table class="cl-table"><thead><tr><th>TT</th><th>Họ tên</th><th>Ngày sinh</th><th>Giới tính</th><th>Dân tộc</th><th>Chỗ ở</th><th>PH</th><th>SĐT</th></tr></thead><tbody>';
     students.forEach((hs,i) => {
-      html += '<tr><td>'+(i+1)+'</td><td style="text-align:left;font-weight:600;cursor:pointer;color:var(--p)" onclick="viewHocBa(\''+hs.Ma_HS+'\')">'+hs.Ho_ten+'</td><td>'+hs.Ngay_sinh+'</td><td>'+hs.Gioi_tinh+'</td><td>'+(hs.Dan_toc||'')+'</td><td style="text-align:left">'+(hs.Cho_o||'')+'</td><td style="text-align:left;font-size:11px">'+(hs.Ho_ten_cha||hs.Ho_ten_me||'')+'</td><td>'+(hs.SDT||'')+'</td></tr>';
+      html += '<tr><td>'+(i+1)+'</td><td style="text-align:left;font-weight:600;cursor:pointer;color:var(--p)" onclick="viewHocBa(\''+hs.Ma_HS+'\')">'+hs.Ho_ten+'</td><td>'+fmtDate(hs.Ngay_sinh)+'</td><td>'+hs.Gioi_tinh+'</td><td>'+(hs.Dan_toc||'')+'</td><td style="text-align:left">'+(hs.Cho_o||'')+'</td><td style="text-align:left;font-size:11px">'+(hs.Ho_ten_cha||hs.Ho_ten_me||'')+'</td><td>'+(hs.SDT||'')+'</td></tr>';
     });
     html += '</tbody></table>';
     main.innerHTML = html;
@@ -1734,7 +1755,7 @@ function hbExportWord(maHS) {
   docHtml += '</style></head><body>';
   docHtml += '<p class="center">'+(t.ten_truong||'').toUpperCase()+'</p>';
   docHtml += '<h2>HỌC BẠ</h2>';
-  docHtml += '<p><b>Họ và tên:</b> '+hs.Ho_ten+' &nbsp; <b>Lớp:</b> '+hs.Ma_lop+' &nbsp; <b>Ngày sinh:</b> '+(hs.Ngay_sinh||'')+'</p>';
+  docHtml += '<p><b>Họ và tên:</b> '+hs.Ho_ten+' &nbsp; <b>Lớp:</b> '+hs.Ma_lop+' &nbsp; <b>Ngày sinh:</b> '+fmtDate(hs.Ngay_sinh)+'</p>';
   docHtml += '<p><b>Giới tính:</b> '+(hs.Gioi_tinh||'')+' &nbsp; <b>Dân tộc:</b> '+(hs.Dan_toc||'')+' &nbsp; <b>Nơi sinh:</b> '+(hs.Noi_sinh||'')+'</p>';
   docHtml += '<p><b>Họ tên cha:</b> '+(hs.Ho_ten_cha||'')+' &nbsp; <b>Họ tên mẹ:</b> '+(hs.Ho_ten_me||'')+'</p>';
   // Section 1: Môn học
@@ -2540,7 +2561,7 @@ async function viewHocBa(maHS) {
   const nlpc = typeof NANG_LUC!=='undefined' ? NANG_LUC.concat(PHAM_CHAT) : [];
   let html = '<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">';
   html += '<div style="background:#fff;border-radius:20px;max-width:780px;width:100%;max-height:92vh;overflow-y:auto;padding:0">';
-  html += '<div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);padding:20px 28px;border-radius:20px 20px 0 0;color:#fff;position:relative"><h3 style="font-size:18px;margin-bottom:4px">📋 Học bạ: '+hs.Ho_ten+'</h3><div style="font-size:13px;opacity:.8">Lớp '+hs.Ma_lop+' · '+(hs.Ngay_sinh||'')+' · '+(hs.Gioi_tinh||'')+'</div><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer">✕</button></div>';
+  html += '<div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);padding:20px 28px;border-radius:20px 20px 0 0;color:#fff;position:relative"><h3 style="font-size:18px;margin-bottom:4px">📋 Học bạ: '+hs.Ho_ten+'</h3><div style="font-size:13px;opacity:.8">Lớp '+hs.Ma_lop+' · '+fmtDate(hs.Ngay_sinh)+' · '+(hs.Gioi_tinh||'')+'</div><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer">✕</button></div>';
   html += '<div style="padding:24px 28px">';
   html += '<h4 style="color:#1e293b;margin-bottom:12px"><i class="fas fa-user" style="color:#7c3aed"></i> Thông tin học sinh</h4>';
   html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:20px"><div style="background:#f8fafc;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#94a3b8">Chiều cao (cm)</div><div style="font-size:18px;font-weight:700">...</div></div><div style="background:#f8fafc;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#94a3b8">Cân nặng (kg)</div><div style="font-size:18px;font-weight:700">...</div></div><div style="background:#f0fdf4;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#16a34a">Nghỉ có phép</div><div style="font-size:18px;font-weight:700;color:#16a34a">0</div></div><div style="background:#fef2f2;border-radius:10px;padding:12px;text-align:center"><div style="font-size:11px;color:#dc2626">Nghỉ không phép</div><div style="font-size:18px;font-weight:700;color:#dc2626">0</div></div></div>';
