@@ -2302,76 +2302,107 @@ function diemExportExcel() {
   if (!diemLopCur) { alert('Chọn lớp trước'); return; }
   var khoi = diemLopCur[0];
   var monList = getMonByKhoi(khoi);
+  var ktdkMon = getKtdkByKhoi(khoi);
   var showKTDK = hasKTDK(diemKy, khoi);
   var t = D.thongTin||{};
-  var kyNames = {GK1:'Giữa HK1',CK1:'Cuối HK1',GK2:'Giữa HK2',CN:'Cuối năm'};
-  // Build rows
-  var aoa = [];
-  // Row 1: Title
-  aoa.push([t.ten_truong||'TRƯỜNG TIỂU HỌC THANH NGỌC']);
-  // Row 2: Subtitle
-  aoa.push(['BẢNG ĐÁNH GIÁ KẾT QUẢ GIÁO DỤC — Kỳ: '+(kyNames[diemKy]||diemKy)+' — Lớp '+diemLopCur+' — Khối '+khoi+' — Năm học '+(t.nam_hoc||'2025-2026')]);
-  // Row 3: Instructions
-  aoa.push(['Môn học: T=Hoàn thành tốt, H=Hoàn thành, C=Chưa hoàn thành | NL/PC: T=Tốt, Đ=Đạt, C=Cần cố gắng | Điểm KTĐK: 1-10 (số nguyên)']);
-  // Row 4: empty
-  aoa.push([]);
-  // Row 5: Header
-  var header = ['TT','Lớp','Mã HS','Họ và tên'];
-  var colWidths = [{wch:4},{wch:5},{wch:12},{wch:22}];
-  var shortNames = {'Tự nhiên và Xã hội':'TNXH','Lịch sử và Địa lí':'LS&ĐL','Hoạt động trải nghiệm':'HĐTN','Giáo dục thể chất':'GDTC','Ngoại ngữ':'NN','Công nghệ':'CN','Tiếng Việt':'T.Việt','Đạo đức':'Đ.đức','Khoa học':'Khoa','Âm nhạc':'ÂN','Mĩ thuật':'MT','Tin học':'TH'};
+  var kyNames = {GK1:'GIỮA HỌC KÌ I',CK1:'CUỐI HỌC KÌ I',GK2:'GIỮA HỌC KÌ II',CN:'CUỐI NĂM HỌC'};
+  var isCuoiNam = (diemKy === 'CN');
+  var shortNames = {'Tự nhiên và Xã hội':'TN&XH','Lịch sử và Địa lí':'LS&ĐL','Hoạt động trải nghiệm':'HĐTN','Giáo dục thể chất':'GDTC','Ngoại ngữ':'Ngoại ngữ','Công nghệ':'Công nghệ','Tiếng Việt':'Tiếng Việt','Đạo đức':'Đạo đức','Khoa học':'Khoa học','Âm nhạc':'Âm nhạc','Mĩ thuật':'Mĩ thuật','Tin học':'Tin học'};
+  var nlShort = {'Tự chủ và tự học':'Tự chủ & tự học','Giao tiếp và hợp tác':'Giao tiếp & hợp tác','Giải quyết vấn đề và sáng tạo':'GQVĐ & sáng tạo'};
+  // === Build column structure ===
+  var cols = []; // {name, subName, width, type}
+  cols.push({name:'Mã HS', width:2, type:'ma'});
+  cols.push({name:'TT', width:3.5, type:'stt'});
+  cols.push({name:'Họ và tên', width:18, type:'ten'});
   monList.forEach(function(m) {
-    header.push(shortNames[m]||m);
-    colWidths.push({wch:6});
-    if (showKTDK && getKtdkByKhoi(khoi).includes(m)) {
-      header.push('Đ');
-      colWidths.push({wch:4});
+    cols.push({name:shortNames[m]||m, fullName:m, width:5.5, type:'mon'});
+    if (showKTDK && ktdkMon.includes(m)) {
+      cols.push({name:'Đ', fullName:m, width:3.5, type:'ktdk'});
     }
   });
-  header.push('');
-  colWidths.push({wch:1});
-  var nlShort = {'Tự chủ và tự học':'Tự chủ','Giao tiếp và hợp tác':'Giao tiếp','Giải quyết vấn đề và sáng tạo':'GQVĐ'};
-  NANG_LUC.forEach(function(n) { header.push(nlShort[n]||n); colWidths.push({wch:7}); });
-  PHAM_CHAT.forEach(function(p) { header.push(p); colWidths.push({wch:7}); });
-  aoa.push(header);
-  // Row 6: Full names sub-header
-  var subHeader = ['','','',''];
-  monList.forEach(function(m) {
-    subHeader.push(m);
-    if (showKTDK && getKtdkByKhoi(khoi).includes(m)) subHeader.push('Điểm');
+  NANG_LUC.forEach(function(n) { cols.push({name:nlShort[n]||n, fullName:n, width:6.5, type:'nl'}); });
+  PHAM_CHAT.forEach(function(p) { cols.push({name:p, fullName:p, width:5.5, type:'pc'}); });
+  if (isCuoiNam) {
+    ['HTXS','HTT','HT','CHT'].forEach(function(x) { cols.push({name:x, width:4.5, type:'kqgd'}); });
+    cols.push({name:'Khen thưởng', width:5, type:'khen'});
+    cols.push({name:'Lên lớp', width:4.5, type:'lenlop'});
+  }
+  var totalCols = cols.length;
+  // === Build AOA ===
+  var aoa = [];
+  // Row 1: School
+  var r1 = new Array(totalCols).fill('');
+  r1[0] = t.ten_truong||'TRƯỜNG TIỂU HỌC THANH NGỌC';
+  aoa.push(r1);
+  // Row 2: Title
+  var r2 = new Array(totalCols).fill('');
+  r2[0] = 'BẢNG TỔNG HỢP KẾT QUẢ ĐÁNH GIÁ GIÁO DỤC '+(kyNames[diemKy]||diemKy);
+  aoa.push(r2);
+  // Row 3: Info
+  var r3 = new Array(totalCols).fill('');
+  r3[0] = 'NĂM HỌC '+(t.nam_hoc||'2025 - 2026')+'     LỚP: '+diemLopCur+'     TRƯỜNG: '+(t.ten_truong||'');
+  aoa.push(r3);
+  // Row 4: Group headers
+  var r4 = new Array(totalCols).fill('');
+  r4[0] = ''; r4[1] = ''; r4[2] = '';
+  var monStart = -1, monEnd = -1, nlStart = -1, nlEnd = -1, pcStart = -1, pcEnd = -1, kqStart = -1, kqEnd = -1;
+  cols.forEach(function(c, i) {
+    if ((c.type==='mon'||c.type==='ktdk') && monStart<0) monStart = i;
+    if (c.type==='mon'||c.type==='ktdk') monEnd = i;
+    if (c.type==='nl' && nlStart<0) nlStart = i;
+    if (c.type==='nl') nlEnd = i;
+    if (c.type==='pc' && pcStart<0) pcStart = i;
+    if (c.type==='pc') pcEnd = i;
+    if (c.type==='kqgd' && kqStart<0) kqStart = i;
+    if (c.type==='kqgd') kqEnd = i;
   });
-  subHeader.push('');
-  NANG_LUC.forEach(function(n) { subHeader.push(n); });
-  PHAM_CHAT.forEach(function(p) { subHeader.push(p); });
-  aoa.push(subHeader);
+  if (monStart>=0) r4[monStart] = 'Môn học và hoạt động giáo dục';
+  if (nlStart>=0) r4[nlStart] = 'Năng lực';
+  if (pcStart>=0) r4[pcStart] = 'Phẩm chất';
+  if (kqStart>=0) r4[kqStart] = 'Đánh giá KQGD';
+  aoa.push(r4);
+  // Row 5: Sub-headers
+  var r5 = cols.map(function(c) { return c.name; });
+  aoa.push(r5);
   // Data rows
   var students = (D.hocSinh||[]).filter(function(h){return h.Ma_lop===diemLopCur}).sort(function(a,b){return (a.Ho_ten||'').localeCompare(b.Ho_ten||'')});
   students.forEach(function(hs, i) {
     var g = diemData[String(hs.Ma_HS)]||{};
-    var row = [i+1, diemLopCur, hs.Ma_HS, hs.Ho_ten];
-    monList.forEach(function(m) {
-      row.push((g[m]||{}).mucDG||'');
-      if (showKTDK && getKtdkByKhoi(khoi).includes(m)) row.push((g[m]||{}).diemKTDK||'');
+    var row = new Array(totalCols).fill('');
+    row[0] = hs.Ma_HS; row[1] = i+1; row[2] = hs.Ho_ten;
+    cols.forEach(function(c, j) {
+      if (c.type==='mon') row[j] = (g[c.fullName]||{}).mucDG||'';
+      else if (c.type==='ktdk') row[j] = (g[c.fullName]||{}).diemKTDK||'';
+      else if (c.type==='nl'||c.type==='pc') row[j] = (g[c.fullName]||{}).mucDG||'';
     });
-    row.push('');
-    NANG_LUC.forEach(function(n) { row.push((g[n]||{}).mucDG||''); });
-    PHAM_CHAT.forEach(function(p) { row.push((g[p]||{}).mucDG||''); });
     aoa.push(row);
   });
-  // Footer
-  aoa.push([]);
-  aoa.push(['Ghi chú: T=Hoàn thành tốt, H=Hoàn thành, C=Chưa hoàn thành. NL/PC: T=Tốt, Đ=Đạt, C=Cần cố gắng']);
-  // Create worksheet
+  // Signature area
+  aoa.push(new Array(totalCols).fill(''));
+  var sigRow = new Array(totalCols).fill('');
+  sigRow[totalCols-6] = 'Ngày ..... tháng ..... năm 2026';
+  aoa.push(sigRow);
+  var sigRow2 = new Array(totalCols).fill('');
+  sigRow2[1] = 'GIÁO VIÊN CHỦ NHIỆM';
+  sigRow2[totalCols-6] = 'HIỆU TRƯỞNG';
+  aoa.push(sigRow2);
+  // === Create worksheet ===
   var ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols'] = colWidths;
-  // Merge title rows
-  ws['!merges'] = [
+  ws['!cols'] = cols.map(function(c) { return {wch:c.width}; });
+  // Merges
+  var merges = [
     {s:{r:0,c:0},e:{r:0,c:5}},
-    {s:{r:1,c:0},e:{r:1,c:5}},
-    {s:{r:2,c:0},e:{r:2,c:5}}
+    {s:{r:1,c:0},e:{r:1,c:totalCols-1}},
+    {s:{r:2,c:0},e:{r:2,c:totalCols-1}}
   ];
+  if (monStart>=0) merges.push({s:{r:3,c:monStart},e:{r:3,c:monEnd}});
+  if (nlStart>=0) merges.push({s:{r:3,c:nlStart},e:{r:3,c:nlEnd}});
+  if (pcStart>=0) merges.push({s:{r:3,c:pcStart},e:{r:3,c:pcEnd}});
+  if (kqStart>=0) merges.push({s:{r:3,c:kqStart},e:{r:3,c:kqEnd}});
+  ws['!merges'] = merges;
   var wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Diem_'+diemLopCur+'_'+diemKy);
-  XLSX.writeFile(wb, 'KQ_DanhGia_'+diemLopCur+'_'+diemKy+'.xlsx');
+  XLSX.utils.book_append_sheet(wb, ws, 'BangTH_'+diemLopCur+'_'+diemKy);
+  XLSX.writeFile(wb, 'TT27_'+diemLopCur+'_'+diemKy+'.xlsx');
 }
 async function diemImportExcel() {
   var input = document.getElementById('diemImportFile');
