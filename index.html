@@ -1726,12 +1726,14 @@ const NL_DT_K12 = ['Ngôn ngữ','Tính toán','Khoa học','Thẩm mĩ','Thể 
 const NL_DT_K3 = ['Ngôn ngữ','Tính toán','Khoa học','Công nghệ','Tin học','Thẩm mĩ','Thể chất'];
 const NL_DT_K45 = ['Ngôn ngữ','Tính toán','Khoa học','Công nghệ','Tin học','Thẩm mĩ','Thể chất'];
 function getNLDTByKhoi(k) { k=parseInt(k); return k<=2?NL_DT_K12:NL_DT_K3; }
+function hasJsPDF() { return typeof jspdf !== 'undefined' && jspdf.jsPDF; }
 
-function hbExportWord(maHS) { hbExportPDF(maHS); } // backward compat
+function hbExportWord(maHS) { hbExportPDF(maHS); }
 function hbExportPDF(maHS) {
   var hs = (D.hocSinh||[]).find(function(h){return String(h.Ma_HS)===String(maHS)});
   if (!hs) { alert('Không tìm thấy HS'); return; }
   collectModalData(hs);
+  if (!hasJsPDF()) { hbExportWordFallback(hs); return; }
   var pdf = buildHocBaPDF(hs);
   pdf.save('HocBa_'+hs.Ho_ten.replace(/\s+/g,'_')+'_'+hs.Ma_lop+'.pdf');
 }
@@ -1739,12 +1741,54 @@ function hbExportClass() {
   if (!diemLopCur) { alert('Chọn lớp trước'); return; }
   var students = (D.hocSinh||[]).filter(function(h){return h.Ma_lop===diemLopCur}).sort(function(a,b){return (a.Ho_ten||'').localeCompare(b.Ho_ten||'')});
   if (!students.length) { alert('Không có HS'); return; }
+  if (!hasJsPDF()) { alert('Thư viện jsPDF chưa tải được. Vui lòng kiểm tra kết nối mạng.'); return; }
   var pdf = new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   students.forEach(function(hs, i) {
     if (i > 0) pdf.addPage();
     addHocBaPages(pdf, hs);
   });
   pdf.save('HocBa_Lop_'+diemLopCur+'.pdf');
+}
+// Fallback: xuất Word nếu jsPDF không load được
+function hbExportWordFallback(hs) {
+  var t = D.thongTin||{};
+  var khoi = parseInt(String(hs.Ma_lop||'')[0]);
+  var monList = getMonByKhoi(khoi);
+  var ktdkMon = getKtdkByKhoi(khoi);
+  var nldt = getNLDTByKhoi(khoi);
+  var grades = diemData[String(hs.Ma_HS)]||{};
+  var sigGVCN = localStorage.getItem('sig_gvcn')||'';
+  var sigHT = localStorage.getItem('sig_ht')||'';
+  var d = '<html><head><meta charset="utf-8"><style>@page{size:A4;margin:1.5cm 2cm}body{font-family:"Times New Roman",serif;font-size:13pt}table{width:100%;border-collapse:collapse;margin:6pt 0}td,th{border:1px solid #000;padding:4pt 6pt;font-size:12pt;vertical-align:top}th{background:#d6e4ff;font-weight:bold;text-align:center}.c{text-align:center}.b{font-weight:bold}.it{font-style:italic}</style></head><body>';
+  d += '<p class="b" style="font-size:14pt">Họ và tên: '+hs.Ho_ten+'     Lớp: '+hs.Ma_lop+'</p>';
+  d += '<p>Chiều cao: '+(hs.Chieu_cao||'...')+' cm     Cân nặng: '+(hs.Can_nang||'...')+' kg</p>';
+  d += '<p class="b it">1. Các môn học và hoạt động giáo dục</p>';
+  d += '<table><tr><th>Môn học</th><th style="width:12%">Mức đạt</th><th style="width:10%">KTĐK</th><th>Nhận xét</th></tr>';
+  monList.forEach(function(m){var g=grades[m]||{};d+='<tr><td>'+m+'</td><td class="c">'+(g.mucDG||'')+'</td><td class="c">'+(ktdkMon.includes(m)?(g.diemKTDK||''):'')+'</td><td>'+(g.nhanXet||'')+'</td></tr>';});
+  d += '</table>';
+  d += '<p class="b it">2. Phẩm chất chủ yếu</p><table><tr><th style="background:#f8d7da">Phẩm chất</th><th style="width:12%;background:#f8d7da">Mức đạt</th><th style="background:#f8d7da">Nhận xét</th></tr>';
+  var pcNx='';PHAM_CHAT.forEach(function(p){var g=grades[p]||{};if(g.nhanXet)pcNx=g.nhanXet;});
+  PHAM_CHAT.forEach(function(p,i){var g=grades[p]||{};d+='<tr><td>'+p+'</td><td class="c">'+(g.mucDG||'')+'</td>';if(i===0)d+='<td rowspan="5">'+(pcNx||'')+'</td>';d+='</tr>';});
+  d += '</table>';
+  d += '<p class="b it">3.1 Năng lực chung</p><table><tr><th style="background:#d1e7dd">Năng lực</th><th style="width:12%;background:#d1e7dd">Mức đạt</th><th style="background:#d1e7dd">Nhận xét</th></tr>';
+  var nlNx='';NANG_LUC.forEach(function(n){var g=grades[n]||{};if(g.nhanXet)nlNx=g.nhanXet;});
+  NANG_LUC.forEach(function(n,i){var g=grades[n]||{};d+='<tr><td>'+n+'</td><td class="c">'+(g.mucDG||'')+'</td>';if(i===0)d+='<td rowspan="3">'+(nlNx||'')+'</td>';d+='</tr>';});
+  d += '</table>';
+  d += '<p class="b it">3.2 Năng lực đặc thù</p><table><tr><th style="background:#ffe5b4">Năng lực</th><th style="width:12%;background:#ffe5b4">Mức đạt</th><th style="background:#ffe5b4">Nhận xét</th></tr>';
+  var nldNx='';nldt.forEach(function(n){var g=grades[n]||{};if(g.nhanXet)nldNx=g.nhanXet;});
+  nldt.forEach(function(n,i){var g=grades[n]||{};d+='<tr><td>'+n+'</td><td class="c">'+(g.mucDG||'')+'</td>';if(i===0)d+='<td rowspan="'+nldt.length+'">'+(nldNx||'')+'</td>';d+='</tr>';});
+  d += '</table>';
+  d += '<p style="margin-top:10pt"><b>4. Đánh giá KQGD:</b> Hoàn thành.</p><p><b>5. Khen thưởng:</b> Không.</p><p><b>6. Hoàn thành:</b> Hoàn thành chương trình lớp '+hs.Ma_lop+'.</p>';
+  d += '<table style="border:none;margin-top:20pt"><tr><td style="border:none;text-align:center;width:50%"><b>Hiệu trưởng</b><br><i style="font-size:10pt">(Ký, đóng dấu)</i>';
+  if(sigHT)d+='<br><img src="'+sigHT+'" width="100">';
+  d+='<br><br><b>'+(t.hieu_truong||'')+'</b></td>';
+  d+='<td style="border:none;text-align:center;width:50%"><b>GVCN</b><br><i style="font-size:10pt">(Ký, ghi rõ họ tên)</i>';
+  if(sigGVCN)d+='<br><img src="'+sigGVCN+'" width="100">';
+  d+='</td></tr></table></body></html>';
+  var blob = new Blob(['\ufeff'+d],{type:'application/msword'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'HocBa_'+hs.Ho_ten.replace(/\s+/g,'_')+'.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 function collectModalData(hs) {
   var maHS = String(hs.Ma_HS);
@@ -1999,7 +2043,7 @@ let diemData = {};
 const MON_KHOI = {
   '1': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
   '2': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
-  '3': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Ngoại ngữ','Tin học','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
+  '3': ['Toán','Tiếng Việt','Đạo đức','Tự nhiên và Xã hội','Ngoại ngữ','Tin học','Công nghệ','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
   '4': ['Toán','Tiếng Việt','Đạo đức','Khoa học','Lịch sử và Địa lí','Ngoại ngữ','Tin học','Công nghệ','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm'],
   '5': ['Toán','Tiếng Việt','Đạo đức','Khoa học','Lịch sử và Địa lí','Ngoại ngữ','Tin học','Công nghệ','Giáo dục thể chất','Âm nhạc','Mĩ thuật','Hoạt động trải nghiệm']
 };
